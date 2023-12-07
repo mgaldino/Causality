@@ -9,39 +9,143 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Livros
+## Descrição do Curso
 
-Gratuitos:
+Este é o terceiro curso na sequências de métodos quantitativos da pós-graduação em ciência polítca da Universidade de São Paulo. O objetivo é fornecer um survey das principais técnicas de inferência causal em trabalhos empíricos, incluindo uma rápida discussão sobre novas metodologias causais para trabalhos qualitativos. O curso se concentra em questões de pesquisa causal baseadas em desenho de pesquisas causais, isto é, questões de pesquisa que buscam recuperar o efeito causal de uma intervenção ou tratamento em alguma variável resposta de interesse.
+
+Tópicos cobertos pelo curso incluem métodos experimentais, variáveis instrumentais, desenho de regressão descontínua, matching, diferença em diferenças e modelos causais estruturais com DAGs. A depender o tempo, poderemos aprofundar nas novas técnicas para estudos dif-in-diff (staggered treatment), ferramentas de machine learning para inferência causal e análise de sensibilidade.
+
+O curso contará também com pelo menos duas aulas a serem dadas em conjunto com a disciplina de métodos qualitativos ministrada pela professora Elizabeth Balbachevski, para discutirmos causalidade dos dois pontos de vista e também para discutirmos como utilizar process tracing para investigação causal.
+
+## Pré-requisitos
+
+O pré-requisito é o curso FLS6183 - Métodos Quantitativos de Pesquisa II ou equivalente em outro departamento. Na prática, assumimos familiaridade com regressão linear e conhecimento básico de operadores como esperança matemática e operações básicas com matrizes e vetores. O curso usará a linguagem de programação R e pressupõe-se familiaridade básica com o software, incluindo como rodar regressões, manipulações de bancos de dados e utilização de Rmarkdown.
+
+## Avaliação
+
+Exercícios semanais, que deverão ser entregues até o começo da aula seguinte e um trabalho final, que deverá ser uma replicação de algum artigo empírico que cubra alguns dos temas do curso ou trabalho original. Os trabalhos deverão ser publicados no Github da autora, em formato hmtl. Trabalhos co-autorados são fortemente encorajados, já que a colaboração é fundamental no trabalhgo científico. Naturalmente, a co-autoria implicará em maior expectativa de qualidade do trabalho final.
+
+## Materiais para o curso
+No geral, vamos seguir o livro do Scott Cunningam (Cunningam_2021), Causal Inference: The Mix Tape. Disponível gratuitamente em https://mixtape.scunning.com/. Abaixo apresento uma lista de outros livros, todos grautitos, que ajudarão a compor as aulas em determinados momentos e vale a pena você dar uma olhada.
+
+
 https://mitpress.mit.edu/9780262037310/
 
-https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/
+Hernan_2020: Hernan MA, Robins JM (2020). Causal Inference:
+What If. Boca Raton: Chapman & Hall/CRC. Disponíovel em: https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/
 
 https://matheusfacure.github.io/python-causality-handbook/landing-page.html
 
-https://book.declaredesign.org/
+Blait_etal_2023: Blair, G., Coppock, A., & Humphreys, M. (2023). Research Design in the Social Sciences: Declaration, Diagnosis, and Redesign. Princeton University Press. Disponível em: https://book.declaredesign.org/
 
-## Blogs e afins
+Outros livros de referência importantes são:
+
+Angrist J. and J.S. Pischke. (2008). Mostly Harmless Econometrics: An Empiricist’s Companion. Princeton University Press.
+
+Gerber, A. S., and Green, D. P. (2012). Field experiments: Design, analysis, and interpretation. WW Norton
+
+### Blogs e afins
 
 https://blogs.worldbank.org/impactevaluations/declaring-and-diagnosing-research-designs
+
+## Agenda Preliminar
+
+Como essa é a primeira vez que estou dando esse curso, a sequência de aulas é preliminar. Ajustes deverão ser feitos ao longo do curso, a depender dos interesses e demandas dos estudantes.
+
+### Apresentação do curso, revisão de regressão linear
+
+Cunningam_2021, Cap. 2
+
+### Potential Outcomes
+
+Cunningam_2021, cap 3
+
+### DAGs
+
+Cunningam_2021, cap 4.
+
+Hernan_2020, Cap. 6 e 7
+
+### Experimentos
+
+Leitura obrigatória: Hernan_2020, Cap. 2; Blait_etal_2023, cap 2.
+
+Leitura opcional: 
+Gerber, A. S., and Green, D. P. (2012). Field experiments: Design, analysis, and interpretation. WW Norton. Cap. 3 e 4.
+
+McClendon, G. H. (2014). Social esteem and participation in contentious politics: A field
+experiment at an LGBT pride rally. American Journal of Political Science, 58(2), 279-290.
+
+### Causalidade com seleção em observáveis (Critério de Back-door, subclassificação e matching) - duas aulas?
+
+Leituras obrigatórias:
+Cunningam_2021, cap 5.
+
+Hernan_2020, Cap. 7 e 15
+
+Rubin, D. B. (2008). For Objective Causal Inference, Design Trumps Analysis. The Annals of Applied Statistics, 808-840.
+
+Elizabeth A. Stuart. "Matching Methods for Causal Inference: A Review and a Look Forward." Statist. Sci. 25 (1) 1 - 21, February 2010. https://doi.org/10.1214/09-STS313
+
+Sekhon, J. S. (2009). Opiates for the matches: Matching methods for causal inference. Annual Review of Political Science, 12, 487-508.
+
+Leituras opcionais
+
+Gilligan, M. J., & Sergenti, E. J. (2008). Do UN interventions cause peace? Using matching to improve causal inference. Quarterly Journal of Political Science, 3(2), 89-122.
+
+Schaefer, B. M., & Figueiredo Filho, D. B. (2023). Deu match? Uma introdução às técnicas de pareamento. Revista Brasileira de Ciências Sociais, 38, e3811039.
+
+### Variáveis instrumentais
+Leitura obrigatória: 
+Cunningam_2021, cap. 7.
+
+Sovey, A. J., and Green, D. P. (2011). Instrumental variables estimation in political science:
+A readers’ guide. American Journal of Political Science, 55(1), 188-200.
+
+Kristopher W. Ramsay. 2011. “Revisiting the Resource Curse: Natural Disasters, the Price of
+Oil, and Democracy.” International Organization 65.
+
+Leitura opcional: 
+Hernan_2020: cap 16.
+
+Cinelli, C., & Hazlett, C. (2022). An omitted variable bias framework for sensitivity analysis of instrumental variables. Available at SSRN 4217915.
+
+###  Regressão Discontínua
+Leitura obrigatória:  Cunningam_2021, cap. 6. 
+
+Imbens, Guido W., and Thomas Lemieux. 2008. Regression Discontinuity Designs: A Guide to
+Practice. Journal of Econometrics 142 (2): 615-35.
+
+Boas, T. C., Hidalgo, F. D., & Richardson, N. P. (2014). The spoils of victory: campaign donations and government contracts in Brazil. The Journal of Politics, 76(2), 415-429.
+
+Leitura opcional: De la Cuesta, B., & Imai, K. (2016). Misunderstandings about the regression discontinuity design in the study of close elections. Annual Review of Political Science, 19, 375-396.
+
+Marshall, J. (2022). Can close election regression discontinuity designs identify effects of winning politician characteristics?. American Journal of Political Science.
+
+## Dif in Dif
+Cunningam_2021, cap. 9. 
+
+Bertrand, M., Duflo, E., & Mullainathan, S. (2004). How much should we trust differences-in-differences estimates?. The Quarterly journal of economics, 119(1), 249-275.
+
+## Dados em Painel
+
+Cunningam_2021, cap. 8.
+
+Hernan_2020: cap 19.
+
+## Process Tracing Bayesiano
+
+Fairfield, T., & Charman, A. E. (2022). Social inquiry and Bayesian inference: Rethinking qualitative research. Cambridge University Press.
+
+Rabbia, M. (2023). Why did Argentina and Uruguay decide to pursue a carbon tax? Fiscal reforms and explicit carbon prices. Review of Policy Research, 40(2), 230-259.
+
+## Queries causais em DAGs com dados qualitativos
+Humphreys, M., & Jacobs, A. M. (2023). Integrating Inferences: Causal Models for Qualitative and Mixed-Method Research. Cambridge University Press.
+
+Galdino, M., Mondo, B. V., Sakai, J. M., & Paiva, N. (2023). The Civil Society Organizations effect: A mixed-methods analysis of bottom-up approaches in Brazilian public policy.
 
 ## Artigos
 
 https://proceedings.mlr.press/v216/zhao23a/zhao23a.pdf
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
