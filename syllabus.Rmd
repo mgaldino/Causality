@@ -1,5 +1,5 @@
 ---
-title: "Programa causalidade"
+title: "Programa - FLS 6441 - Métodos III: Causação e Explicação"
 author: "Manoel Galdino"
 date: "2023-12-03"
 output: 
@@ -31,8 +31,6 @@ A avaliação consiste em exercícios (aproximadamente) semanais, que deverão s
 ## Materiais para o curso
 No geral, vamos seguir o livro do Scott Cunningam (Cunningam_2021), Causal Inference: The Mix Tape. Disponível gratuitamente em https://mixtape.scunning.com/. Abaixo apresento uma lista de outros livros, que ajudarão a compor as aulas em determinados momentos e vale a pena você dar uma olhada.
 
-
-
 Hernan_2020: Hernan MA, Robins JM (2020). Causal Inference:
 What If. Boca Raton: Chapman & Hall/CRC. Disponíovel em: https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/
 
@@ -41,10 +39,6 @@ Blait_etal_2023: Blair, G., Coppock, A., & Humphreys, M. (2023). Research Design
 Angrist J. and J.S. Pischke. (2008). Mostly Harmless Econometrics: An Empiricist’s Companion. Princeton University Press.
 
 Gerber, A. S., and Green, D. P. (2012). Field experiments: Design, analysis, and interpretation. WW Norton.
-
-### Blogs e afins
-
-https://blogs.worldbank.org/impactevaluations/declaring-and-diagnosing-research-designs
 
 ## Agenda Preliminar
 
@@ -67,6 +61,7 @@ Hernan_2020, Cap. 1, 6 e 7
 ### Experimentos
 
 Leitura obrigatória: Hernan_2020, Cap. 2; Blait_etal_2023, cap 2.
+https://blogs.worldbank.org/impactevaluations/declaring-and-diagnosing-research-designs
 
 Leitura opcional: 
 Gerber, A. S., and Green, D. P. (2012). Field experiments: Design, analysis, and interpretation. WW Norton. Cap. 3 e 4.
