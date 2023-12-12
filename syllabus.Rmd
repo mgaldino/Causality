@@ -13,23 +13,22 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Descrição do Curso
 
-Este é o terceiro curso na sequências de métodos quantitativos da pós-graduação em ciência polítca da Universidade de São Paulo. O objetivo é fornecer um survey das principais técnicas de inferência causal em trabalhos empíricos, incluindo uma rápida discussão sobre novas metodologias causais para trabalhos qualitativos. O curso se concentra em questões de pesquisa causal baseadas em desenho de pesquisas causais, isto é, questões de pesquisa que buscam recuperar o efeito causal de uma intervenção ou tratamento em alguma variável resposta de interesse.
+Este é o terceiro curso na sequência de métodos quantitativos da pós-graduação em ciência política da Universidade de São Paulo. O objetivo é fornecer um survey das principais técnicas de inferência causal em trabalhos empíricos, incluindo uma rápida discussão sobre novas metodologias causais para trabalhos qualitativos. O curso se concentra em questões de pesquisa causal baseadas no desenho de pesquisas causais, isto é, questões de pesquisa que buscam recuperar o efeito causal de uma intervenção ou tratamento em alguma variável resposta de interesse.
 
-Tópicos cobertos pelo curso incluem métodos experimentais, variáveis instrumentais, desenho de regressão descontínua, matching, diferença em diferenças e modelos causais estruturais com DAGs. A depender o tempo, poderemos aprofundar nas novas técnicas para estudos dif-in-diff (staggered treatment), ferramentas de machine learning para inferência causal e análise de sensibilidade.
+Tópicos cobertos pelo curso incluem métodos experimentais, variáveis instrumentais, desenho de regressão descontínua, matching, diferença em diferenças e modelos causais estruturais com DAGs. Dependendo do tempo, poderemos aprofundar nas novas técnicas para estudos dif-in-diff (staggered treatment), ferramentas de machine learning para inferência causal e análise de sensibilidade.
 
 O curso contará também com pelo menos duas aulas a serem dadas em conjunto com a disciplina de métodos qualitativos ministrada pela professora Elizabeth Balbachevski, para discutirmos causalidade dos dois pontos de vista e também para discutirmos como utilizar process tracing para investigação causal.
-
 ## Pré-requisitos
 
-O pré-requisito é o curso FLS6183 - Métodos Quantitativos de Pesquisa II ou equivalente em outro departamento. Na prática, assumimos familiaridade com regressão linear e conhecimento básico de operadores como esperança matemática e operações básicas com matrizes e vetores. O curso usará a linguagem de programação R e pressupõe-se familiaridade básica com o software, incluindo como rodar regressões, manipulações de bancos de dados e utilização de Rmarkdown.
+O pré-requisito é o curso FLS6183 - Métodos Quantitativos de Pesquisa II ou equivalente em outro departamento. Na prática, assumimos familiaridade com regressão linear e conhecimento básico de operadores como esperança matemática e operações básicas com matrizes e vetores. O curso usará a linguagem de programação R e pressupõe familiaridade básica com o software, incluindo como rodar regressões, manipulações de bancos de dados e utilização de Rmarkdown.
 
 ## Avaliação
-A avaliação consiste em exercícios (aproximadamente) semanais, que deverão ser entregues até o começo da aula seguinte e um trabalho final, que deverá ser uma replicação de algum artigo empírico que cubra alguns dos temas do curso ou trabalho original. Os trabalhos deverão conter um script em Rmardkwon, pdf e ser publicados no Github da autora, em formato hmtl. Trabalhos co-autorados são fortemente encorajados, já que a colaboração é fundamental no trabalhgo científico. Naturalmente, a co-autoria implicará em maior expectativa de qualidade do trabalho final.
+A avaliação consiste em exercícios (aproximadamente) semanais, que deverão ser entregues até o começo da aula seguinte e um trabalho final, que deverá ser uma replicação de algum artigo empírico que cubra alguns dos temas do curso ou trabalho original. Os trabalhos deverão conter um script em Rmarkdown, PDF e ser publicados no Github da autora, em formato HTML. Trabalhos co-autorados são fortemente encorajados, já que a colaboração é fundamental no trabalho científico. Naturalmente, a co-autoria implicará em maior expectativa de qualidade do trabalho final.
 
-É esperado que para cada aula seja feita previamente a leitura obrigatória. A leitura opcional é recomendada que seja feita após a respectiva aula. 
+É esperado que, para cada aula, seja feita previamente a leitura obrigatória. A leitura opcional é recomendada que seja feita após a respectiva aula.
 
 ## Materiais para o curso
-No geral, vamos seguir o livro do Scott Cunningam (Cunningam_2021), Causal Inference: The Mix Tape. Disponível gratuitamente em https://mixtape.scunning.com/. Abaixo apresento uma lista de outros livros, que ajudarão a compor as aulas em determinados momentos e vale a pena você dar uma olhada.
+No geral, vamos seguir o livro do Scott Cunningham (Cunningham_2021), Causal Inference: The Mix Tape. Disponível gratuitamente em https://mixtape.scunning.com/. Abaixo apresento uma lista de outros livros, que ajudarão a compor as aulas em determinados momentos e vale a pena você dar uma olhada.
 
 Hernan_2020: Hernan MA, Robins JM (2020). Causal Inference:
 What If. Boca Raton: Chapman & Hall/CRC. Disponíovel em: https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/
