@@ -2,7 +2,9 @@
 title: "Programa causalidade"
 author: "Manoel Galdino"
 date: "2023-12-03"
-output: pdf_document
+output: 
+  pdf_document:
+    number_sections: true
 ---
 
 ```{r setup, include=FALSE}
@@ -22,27 +24,23 @@ O curso contará também com pelo menos duas aulas a serem dadas em conjunto com
 O pré-requisito é o curso FLS6183 - Métodos Quantitativos de Pesquisa II ou equivalente em outro departamento. Na prática, assumimos familiaridade com regressão linear e conhecimento básico de operadores como esperança matemática e operações básicas com matrizes e vetores. O curso usará a linguagem de programação R e pressupõe-se familiaridade básica com o software, incluindo como rodar regressões, manipulações de bancos de dados e utilização de Rmarkdown.
 
 ## Avaliação
+A avaliação consiste em exercícios (aproximadamente) semanais, que deverão ser entregues até o começo da aula seguinte e um trabalho final, que deverá ser uma replicação de algum artigo empírico que cubra alguns dos temas do curso ou trabalho original. Os trabalhos deverão conter um script em Rmardkwon, pdf e ser publicados no Github da autora, em formato hmtl. Trabalhos co-autorados são fortemente encorajados, já que a colaboração é fundamental no trabalhgo científico. Naturalmente, a co-autoria implicará em maior expectativa de qualidade do trabalho final.
 
-Exercícios semanais, que deverão ser entregues até o começo da aula seguinte e um trabalho final, que deverá ser uma replicação de algum artigo empírico que cubra alguns dos temas do curso ou trabalho original. Os trabalhos deverão ser publicados no Github da autora, em formato hmtl. Trabalhos co-autorados são fortemente encorajados, já que a colaboração é fundamental no trabalhgo científico. Naturalmente, a co-autoria implicará em maior expectativa de qualidade do trabalho final.
+É esperado que para cada aula seja feita previamente a leitura obrigatória. A leitura opcional é recomendada que seja feita após a respectiva aula. 
 
 ## Materiais para o curso
-No geral, vamos seguir o livro do Scott Cunningam (Cunningam_2021), Causal Inference: The Mix Tape. Disponível gratuitamente em https://mixtape.scunning.com/. Abaixo apresento uma lista de outros livros, todos grautitos, que ajudarão a compor as aulas em determinados momentos e vale a pena você dar uma olhada.
+No geral, vamos seguir o livro do Scott Cunningam (Cunningam_2021), Causal Inference: The Mix Tape. Disponível gratuitamente em https://mixtape.scunning.com/. Abaixo apresento uma lista de outros livros, que ajudarão a compor as aulas em determinados momentos e vale a pena você dar uma olhada.
 
 
-https://mitpress.mit.edu/9780262037310/
 
 Hernan_2020: Hernan MA, Robins JM (2020). Causal Inference:
 What If. Boca Raton: Chapman & Hall/CRC. Disponíovel em: https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/
 
-https://matheusfacure.github.io/python-causality-handbook/landing-page.html
-
 Blait_etal_2023: Blair, G., Coppock, A., & Humphreys, M. (2023). Research Design in the Social Sciences: Declaration, Diagnosis, and Redesign. Princeton University Press. Disponível em: https://book.declaredesign.org/
-
-Outros livros de referência importantes são:
 
 Angrist J. and J.S. Pischke. (2008). Mostly Harmless Econometrics: An Empiricist’s Companion. Princeton University Press.
 
-Gerber, A. S., and Green, D. P. (2012). Field experiments: Design, analysis, and interpretation. WW Norton
+Gerber, A. S., and Green, D. P. (2012). Field experiments: Design, analysis, and interpretation. WW Norton.
 
 ### Blogs e afins
 
@@ -50,21 +48,21 @@ https://blogs.worldbank.org/impactevaluations/declaring-and-diagnosing-research-
 
 ## Agenda Preliminar
 
-Como essa é a primeira vez que estou dando esse curso, a sequência de aulas é preliminar. Ajustes deverão ser feitos ao longo do curso, a depender dos interesses e demandas dos estudantes.
+Como essa é a primeira vez que estou dando esse curso, a sequência de aulas é preliminar. Ajustes deverão ser feitos ao longo do curso, a depender dos interesses e demandas das estudantes.
 
 ### Apresentação do curso, revisão de regressão linear
-
+Leitura obrigatória:
 Cunningam_2021, Cap. 2
 
-### Potential Outcomes
-
+### Causalidade e Potential Outcomes
+Leitura obrigatória:
 Cunningam_2021, cap 3
 
-### DAGs
-
+### Causalidade DAGs
+Leitura obrigatória:
 Cunningam_2021, cap 4.
 
-Hernan_2020, Cap. 6 e 7
+Hernan_2020, Cap. 1, 6 e 7
 
 ### Experimentos
 
@@ -76,7 +74,7 @@ Gerber, A. S., and Green, D. P. (2012). Field experiments: Design, analysis, and
 McClendon, G. H. (2014). Social esteem and participation in contentious politics: A field
 experiment at an LGBT pride rally. American Journal of Political Science, 58(2), 279-290.
 
-### Causalidade com seleção em observáveis (Critério de Back-door, subclassificação e matching) - duas aulas?
+### Causalidade com seleção em observáveis (Critério de Back-door, subclassificação e matching)
 
 Leituras obrigatórias:
 Cunningam_2021, cap 5.
@@ -122,30 +120,39 @@ Leitura opcional: De la Cuesta, B., & Imai, K. (2016). Misunderstandings about t
 
 Marshall, J. (2022). Can close election regression discontinuity designs identify effects of winning politician characteristics?. American Journal of Political Science.
 
-## Dif in Dif
+### Dif in Dif
 Cunningam_2021, cap. 9. 
 
 Bertrand, M., Duflo, E., & Mullainathan, S. (2004). How much should we trust differences-in-differences estimates?. The Quarterly journal of economics, 119(1), 249-275.
 
-## Dados em Painel
+Silva, G. P. D. (2017). Same institutions, same outcomes? Comparing the effect of electoral competition on the level of concentration of votes. Opinião Pública, 23(3), 682-713.
+
+### Dados em Painel
 
 Cunningam_2021, cap. 8.
 
 Hernan_2020: cap 19.
 
-## Process Tracing Bayesiano
+Lucardi, A., & Micozzi, J. P. (2022). District magnitude and female representation: evidence from Argentina and Latin America. American Journal of Political Science, 66(2), 318-336.
+
+### Process Tracing Bayesiano
 
 Fairfield, T., & Charman, A. E. (2022). Social inquiry and Bayesian inference: Rethinking qualitative research. Cambridge University Press.
 
 Rabbia, M. (2023). Why did Argentina and Uruguay decide to pursue a carbon tax? Fiscal reforms and explicit carbon prices. Review of Policy Research, 40(2), 230-259.
 
-## Queries causais em DAGs com dados qualitativos
+### Queries causais em DAGs com dados qualitativos
 Humphreys, M., & Jacobs, A. M. (2023). Integrating Inferences: Causal Models for Qualitative and Mixed-Method Research. Cambridge University Press.
 
 Galdino, M., Mondo, B. V., Sakai, J. M., & Paiva, N. (2023). The Civil Society Organizations effect: A mixed-methods analysis of bottom-up approaches in Brazilian public policy.
 
-## Artigos
+### Tópicos Especiais
 
-https://proceedings.mlr.press/v216/zhao23a/zhao23a.pdf
+#### Machine Learning e Econometria
+Belloni, A., Chernozhukov, V., & Hansen, C. (2014). Inference on treatment effects after selection among high-dimensional controls. Review of Economic Studies, 81(2), 608-650.
 
+Mullainathan, S., & Spiess, J. (2017). Machine learning: an applied econometric approach. Journal of Economic Perspectives, 31(2), 87-106.
 
+Athey, S., & Imbens, G. W. (2019). Machine learning methods that economists should know about. Annual Review of Economics, 11, 685-725.
+
+Grimmer, J., Roberts, M. E., & Stewart, B. M. (2021). Machine learning for social science: An agnostic approach. Annual Review of Political Science, 24, 395-419.
