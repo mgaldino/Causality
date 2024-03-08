@@ -1,0 +1,18 @@
+---
+title: "teste"
+author: "Manoel Galdino"
+date: "2024-03-07"
+output: pdf_document
+---
+
+## Teste
+
+$$
+(Y^1, Y^o) \perp\!\!\!\perp D|X
+$$
+O símbolo $\perp\!\!\!\perp$ é nossa notação para independência estatística. E implica que a esperança dos resultados potenciais de tratamento e controle são iguais no tratamento e controle para cada valor de $x$. Formalmente, escrevemos:
+
+\begin{equation}
+\mathbb{E}[Y^1|D=1,X] =  \mathbb{E}[Y^1|D=0,X] \\
+\mathbb{E}[Y^0|D=1,X] =  \mathbb{E}[Y^0|D=0,X]
+\end{equation}
