@@ -1,0 +1,79 @@
+---
+title: "Revisão Regressão"
+author: "Manoel Galdino"
+date: "2024-03-14"
+output: 
+  pdf_document:
+    extra_dependencies: ["mathtools"]
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Notação
+
+Vamos começar revisando algumas notações matemáticas que usaremos ao longo do curso.
+
+### Somatório
+
+Se eu tenho uma sequências de números $x_1, x_2, ..., x_n$, a soma dessa sequência é dada por:
+
+$$
+x_1 + x_2 + \ldots + x_n \coloneq \sum_{i=1}^n x_i
+$$
+Ás vezes, quando ficar claro no contexto quais os elementos que estão sendo somados (como nesse caso, que são toda a sequência de $x_1$ até $x_n$), dispensaremos os índices do somatório e simplesmente escreveremos $\sum x_i$.
+
+
+O operador somatório é linear e, portanto, possui algumas propriedades comuns a operadores lineares.
+
++ Para qualquer constante $c$, $\sum_{i=1}^n c \equiv nc$
++ Para qualquer constante $c$, $\sum_{i=1}^n cx_i \equiv c\sum_{i=1}^n x_i$
++ A soma de somatórios é idêntico à somatória das somas, isto é: $\sum_{i=1}^n (x_i + y_i) \equiv \sum_{i=1}^n x_i + \sum_{i=1}^n y_i$
++ Para quaisquer constantes $a$ e $b$, $\sum_{i=1}^n (ax_i + by_i) \equiv a\sum_{i=1}^n x_i + b\sum_{i=1}^n y_i$
+
+Por fim, vale destacar relações que não são em geral verdadeiras, isto é, não são propriedades do somatório.
+
++ O somatório de uma razão **não é** a razão do somatório: $\sum_{i=1}^n \frac{x_i}{y_i} \neq \frac{\sum_{i=1}^n x_i}{\sum_{i=1}^n y_i}$
++ o somatório de uma variável ao quadrado **não é** igual ao somatório da variável ao quadrado: $\sum_{i=1}^n x_i^2 \neq (\sum_{i=1}^n x_i)^2$
+
+Vamos usar somatório para definir a média:
+
+$$
+\bar{x} \coloneq \frac{\sum_{i=1}^n x_i}{n}
+$$
+Uma propriedade envolvendo a média e o somatório é que somar a diferença de uma variável aleatória para a média é zero.
+$$
+\sum_{i=1}^n (x_i - \bar{x}) \equiv 0
+$$
+
+Uma resultado útil é:
+$$
+\sum_{i=1}^n (x_i - \bar{x})^2 = \sum_{i=1}^n x_i^2 - n\bar{x}^2
+$$
+Exercício em sala: prove esse resultado. Dica: expanda o quadrado, aplique as propriedades do somatório, reescreva ora o somatório como uma média, ora a média como somatório, coloque em eivdência e simplifique.
+
+### Esperança
+
+O valor esperado de uma variável aleatória é chamado de esperança ou média populacional. Para uma variável aleatória discreta $X$ que pode assumir os valores $x_1, x_2, \ldots, x_n$ cada um com probabilidade $p(x_1), p(x_2), \ldots p(x_n)$ possui esperança definida por:
+$$
+\mathbb{E}[X] \coloneq p(x_1)x_1 + p(x_2)x_2 + \ldots + p(x_n)x_n = \sum_{i=1}^2 p(x_i)x_i
+$$
+
+O operador esperança é linear e, portanto, possui algumas propriedades comuns a operadores lineares.
+
++ Para qualquer constante $c$, $\mathbb{E}[c] \equiv c$
++ Para qualquer constante $a$, $\mathbb{E}[aX] \equiv a \mathbb{E}[X]$
++ Para quaisquer constantes $a$ e $b$, $\mathbb{E}[aX + b] \equiv a \mathbb{E}[X] + b$
++ Para ...
++ A soma de somatórios é idêntico à somatória das somas, isto é: $\sum_{i=1}^n (x_i + y_i) \equiv \sum_{i=1}^n x_i + \sum_{i=1}^n y_i$
++ Para quaisquer constantes $a$ e $b$, $\sum_{i=1}^n (ax_i + by_i) \equiv a\sum_{i=1}^n x_i + b\sum_{i=1}^n y_i$
+
+
+### Variância
+
+
+### Covariância
+
