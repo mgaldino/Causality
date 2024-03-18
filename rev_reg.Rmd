@@ -50,9 +50,11 @@ $$
 $$
 
 Uma resultado útil é:
-$$
+
+\begin{align}
 \sum_{i=1}^n (x_i - \bar{x})^2 = \sum_{i=1}^n x_i^2 - n\bar{x}^2
-$$
+\end{align}
+
 Exercício em sala: prove esse resultado. Dica: expanda o quadrado, aplique as propriedades do somatório, reescreva ora o somatório como uma média, ora a média como somatório, coloque em eivdência e simplifique.
 
 ### Esperança
@@ -74,6 +76,290 @@ O operador esperança é linear e, portanto, possui algumas propriedades comuns 
 
 ### Variância
 
+A variância de uma variável aleatória $X$ é dada por:
+
+Definição 1. $Var(X) = \mathbb{E}[(X - \mathbb{E}[X])^2]$.
+
+Uma propriedade útil é a chamada identidade da variância:
+
+\begin{align}
+\text{Var}(X) &\coloneq \mathbb{E}[(X - \mathbb{E}[X])^2] \equiv \mathbb{E}[X^2] - (\mathbb{E}[X])^2 \\
+\\
+Vamos provar a identidade:
+\\
+\mathbb{E}[(X - \mathbb{E}[X])^2] = \mathbb{E}[(X - \mathbb{E}[X]) \cdot (X - \mathbb{E}[X])] \\
+&= \mathbb{E}[X^2 - 2 \cdot \mathbb{E}[X] \cdot X + (\mathbb{E}[X])^2] \tag{2. Aplicando a regra do quadrado} \\
+&= \mathbb{E}[X^2] - \mathbb{E}[2\mathbb{E}[X]X] + \mathbb{E}[(\mathbb{E}[X])^2] \tag{3. Propriedade da esperança} \\
+&= \mathbb{E}[X^2] - 2\mathbb{E}[\mathbb{E}[X]X] + \mathbb{E}[(\mathbb{E}[X])^2] \\
+&= \mathbb{E}[X^2] - 2\mathbb{E}[X] \cdot \mathbb{E}[X] + (\mathbb{E}[X])^2 \tag{4. $\mathbb{E}[aX] = a\mathbb{E}[X]$} \\
+&= \mathbb{E}[X^2] - (\mathbb{E}[X])^2 \tag{5. Simplificando}
+\end{align}
+
 
 ### Covariância
 
+A Covariância de duas v.a. $X$ e $Y$ é definida como:
+$Cov(X,Y) = \mathbb{E}[(X -  \mathbb{E}[X])*(Y -  \mathbb{E}[Y])]$.
+
+Notem que $Cov(X,X) = Var(X)$.
+
+A covariância é positiva quando ambos X e Y tendem a ter valores acima (ou abaixo) de sua média simultaneamente, enquanto ela é negativa quando uma v.a. tende a ter valores acima da sua média e a outra abaixo.
+
+3. Identidade da Covariância
+
+$Cov(X,Y) = \mathbb{E}[X*Y] - \mathbb{E}[X]*\mathbb{E}[Y] =  \mathbb{E}[(X -  \mathbb{E}[X])*(Y -  \mathbb{E}[Y])]$
+Exercício para o leitor. Prove que isso é verdade.
+
+4, Covariância é simétrica
+
+$Cov(X,Y) = Cov(Y,X)$
+
+5. Variância não é linear
+ $Var(a*X + b) = a^2*Var(x)$
+
+6. Covariância não é linear
+
+ $Cov(a*X + b,Y) = a*Cov(Y,X)$
+ 
+## Regressão
+
+Normalmente, nós assumimos que existe um modelo populacional, dado pela equação de regressão populacional:
+
+$$
+y = \beta_0 + \beta_1 x + u
+$$
+Nós chamamos o $y$ de variável dependente, resposta, explicada, predita etc. Chamamos o $x$ de preditor, variável independente, variável explicativa etc.
+
+Os parâmetros $\beta_0$ e $\beta_1$ não são dados e, portanto, não podem ser observados. No máximo, podem ser estimados, a partir de dados e suposições críveis. Portanto, a **credibilidade das suposições** será um tema constante no curso. Como veremos, a moderna prática de inferência causal gira em torno de estratgégias de identificação críveis, isto é, que adotam suposições críveis.
+
+E o termo de erro $u$ resume todas as demais variáveis que impactam $y$ e que não estão explicitamente consideradas no modelo na forma funcional especificada.
+
+### Suposições
+
+1. Sem perda de generalidade (portanto, uma suposição simplificadora sem maiores consequências) é que o valor esperado de $\mu$ é zero na população. Formalmente:
+
+\begin{equation}
+\mathbb{E}[u] = 0
+\end{equation}
+
+2. Independência na média
+
+Vamos assumir que o termo de erro $u$ é independente do preditor para cada valor de $x$. Formalmente,
+\begin{equation}
+\mathbb{E}[u|x] = \mathbb{E}[u]
+\end{equation}
+
+Combinando equação 6 com 7, chegamos a equação 8:
+
+\begin{equation}
+\mathbb{E}[u|x] = 0
+\end{equation}
+
+Essa suposição é chamada de suposição de média condicional zero e é crítica em modelos de regressão. Isso porque ela implica que:
+
+\begin{equation}
+\mathbb{E}[y|x] = \beta_0 + \beta_1 x
+\end{equation}
+
+A equação 9 mostra que a função de regressão populacional é linear em X, o que Angrist e Pischke chamam de Função de Esperança Condicional (CEF, na sigla em inglês).
+
+Quando a suposição 8 é satisfeita, poderemos interpretar $\beta_1$ como um prâmetro causal.
+
+### OLS
+
+Lembremos que:
+\begin{equation}
+\mathbb{E}[u|x] = 0 \implies \mathbb{E}[ux] = 0
+\end{equation}
+
+Podemos provar isso usando a Lei da Esperanças Iteradas:
+
+\begin{align}
+\mathbb{E}[ux] = \mathbb{E}[\mathbb{E}[ux]] = \\
+\mathbb{E}[x\mathbb{E}[u]] =  \tag{1. usando o fato de que $x$ é fixo}  \\
+\mathbb{E}[x \cdot 0] = \mathbb{E}[0] = 0 
+\end{align}
+
+Portanto, basta usar as condições nas equações 6 e 8 para obter estimativas para os parâmetros da regressão.
+
+Vejam que $\mathbb{E}[ux] = 0$, então podemos provar que  $\mathbb{Cov}[u,x] = 0$. 
+
+\begin{equation}
+\mathbb{E}[u] = \mathbb{E}[y - \beta_0 - \beta_1 x] = 0
+\mathbb{E}[u|X] = \mathbb{E}[y - \beta_0 - \beta_1 x] = 0
+\end{equation}
+
+\begin{equation}
+\mathbb{E}[x u] = \mathbb{E}[x(y - \beta_0 - \beta_1 x)] = 0
+\end{equation}
+
+Essas são as duas condições que determinam os valores dos parâmetros $\beta_0$ e $beta_1$ na população. Como em geral temos apenas uma amostra para estimar os parâmetros, podemos estimá-los pelos chamados "plug-in estimators", isto é, a contraparte amostral da fórmula populacional. No caso da esperança, precisamos calcular as médias:
+
+\begin{align}
+\frac{1}{n}\sum_{i=1}^n(y_i - \hat{\beta_0} - \hat{\beta_1} x_i) = 0 \\
+\frac{1}{n}\sum_{i=1}^n(x_i(y_i - \hat{\beta_0} - \hat{\beta_1} x_i)) = 0
+\end{align}
+
+Simplificando as equações 15 e 16, temos:
+
+\begin{align}
+\frac{1}{n}\sum_{i=1}^n(y_i - \hat{\beta_0} - \hat{\beta_1} x_i) =  \\
+\frac{1}{n}\sum_{i=1}^n y_i - \frac{1}{n}\sum_{i=1}^n\hat{\beta_0} - \frac{1}{n}\sum_{i=1}^n\hat{\beta_1} x_i = \\
+\frac{1}{n}\sum_{i=1}^n y_i - \hat{\beta_0} - \hat{\beta_1}\frac{1}{n}\sum_{i=1}^n x_i = \\
+\bar{y} - \hat{\beta_0} - \hat{\beta_1} \bar{x} = 0 \\
+\hat{\beta_0} = \bar{y} - \hat{\beta_1} \bar{x}
+\end{align}
+
+\begin{align}
+\frac{1}{n}\sum_{i=1}^n(x_i(y_i - (\bar{y} - \hat{\beta_1} \bar{x}) - \hat{\beta_1} x_i)) = 0 \tag{1. substituindo a equação de $\hat{\beta_0}$ em 16}\\
+\frac{1}{n}\sum_{i=1}^n x_i(y_i - \bar{y}) + \frac{1}{n}\sum_{i=1}^n (\hat{\beta_1}\bar{x}x_i - \hat{\beta_1} x_ix_i) = 0\\
+\sum_{i=1}^n x_i(y_i - \bar{y}) = \hat{\beta_1}\sum_{i=1}^n (x_i^2 - \bar{x}x_i) = \\
+\sum_{i=1}^n x_i(y_i - \bar{y}) = \hat{\beta_1}(\sum_{i=1}^n x_i^2 - \bar{x}\sum_{i=1}^n x_i) = \\
+\sum_{i=1}^n x_i(y_i - \bar{y}) = \hat{\beta_1}(\sum_{i=1}^n x_i^2 - n \bar{x}\bar{x}) = \\
+\end{align}
+
+Lemrbando o resultado 1 de somatório, temos:
+
+\begin{align}
+\sum_{i=1}^n x_i(y_i - \bar{y}) = \hat{\beta_1}\sum_{i=1}^n (x_i - \bar{x})^2 = \\
+\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) = \hat{\beta_1}\sum_{i=1}^n (x_i - \bar{x})^2 = \tag{1. usando resultado 2} \\
+\hat{\beta_1} = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2}
+\end{align}
+
+E o resíduo (para distringuir do erro) é a diferença entre a previsão do modelo, dada por $\hat{y_i} = \hat{\beta_0} + \hat{\beta_1}$ e o valor observado $y_i$.
+
+$$
+\hat{u} = y_i - \hat{y_i} = y_i - (\hat{\beta_0} + \hat{\beta_1})
+$$
+
+
+É possível mostrar, usando cálculo, que o estimador de OLS é exatamente dado por essa fórmula. Basta escrever a fórmula do quadrado dos resíduos e minimizá-la.
+
+### Propriedades do modelo de regressão
+
+Por contrução, a soma dos resíduos é sempre zero.
+\begin{align}
+\frac{1}{n}\sum_{i=1}^n(y_i - \hat{\beta_0} - \hat{\beta_1} x_i) = 0
+\frac{1}{n}\sum_{i=1}^n \hat{u} = 0
+\end{align}
+
+Também por contrução, a covariância amostral entre os resíduos e os preditores é sempre zero.
+
+\begin{align}
+\frac{1}{n}\sum_{i=1}^n(x_i(y_i - \hat{\beta_0} - \hat{\beta_1} x_i)) = 0
+\frac{1}{n}\sum_{i=1}^n(x_i\hat{u}) = 0
+\end{align}
+
+Por fim, como o $\hat{y_i}$ é uma função linear de $x_i$, a covariância amostral entre $\hat{y_i}$ e o resíduo $\hat{u_i}$ também é zero.
+
+### Propriedades do estimador
+
+Com a suposição de independência média do erro em relação a $x$, podemos provar que o estimador de OLD é não-viesado, isto é: 
+$$
+\mathbb{E}[\hat{\beta_0}] = \beta_0
+$$
+
+E também:
+
+$$
+\mathbb{E}[\hat{\beta_1}] = \beta_1
+$$
+As suposições chave nessa demonstração são: modelo linear, amostra aleatória iid e independência na média do erro em relação aos preditores.
+
+## Teorema da anatomia da regressão
+
+Uma última propriedade da regressão que quero discutir aqui (e que é útil pela conexão com o viés de variável omitida) é o que Angrist and Psichke chamaram de anatomia da regressão.
+
+Vamos supor que queremos estimar o efeito causal do número de filhas mulheres sobre a ideologia dos pais. A hipótese é que mais filhas mullheres tornam os pais mais liberais (no sentido americano). Se o número de filhas mulheres for aleatório, então a nossa equação de regressão $Y_i = \beta_0 + \beta_1 x_i + u_i$ captura, por meio de $\beta_1$ o efeito causal médio de número de filhas mulheres sobre a ideologia dos pais. Isso porque, se for realmente aleatório, então $\mathbb{E}[u|x] = 0$. Porém, $x$ provavelmente não é aleatório, já que muitas pessoas tentam ter um certo número de filhas. Para fins pedagógicos, vamos supor que é condicionalmente aleatório, isto é, se condicionarmos na idade e renda dos pais. Nossa equação de regressão fica então:
+
+$$
+Y_i = \beta_0 + \beta_1 x_i + \beta_2 R_i + \beta3 I_i + u_i
+$$
+em que $R_i$ é a renda da família $i$ e $I_i$ é a idade média da família $i$. O teorema da anatomia da regressão detalha como interpretar $\beta_1$.
+
+De modo ,geral, com $k$ variáveis preditoras, temos:
+
+$$
+Y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + ... + \beta_k x_{ki} + ... + \beta_k x_{Ki} + e_i
+$$
+
+Vamos definir uma regressão auxiliar, em que regredimos $x_{1i}$ em função de todos os outros preditores:
+
+$$
+x_{1i} = \gamma_0 + \gamma_{k-1} x_{k-1i} + \gamma_{k+1} x_{k+1i} + ... + \beta_K x_{Ki} + f_i
+$$
+
+Defina o resíduo $\tilde{x} = x_{1i} + \hat{x}_{1i}$. Então, o parâmetro $\beta_1$ da equação principal de regressão pode ser reescrito como:
+
+$$
+\beta_1 = \frac{Cov(y_i, \tilde{x})}{Var(\tilde{x})}
+$$
+
+Vamos ver o exemplo que o Scott dá no livro dele:
+
+
+```{r reg-anatomy, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(haven)
+library(ggplot2)
+library(stargazer)
+
+read_data <- function(df) {
+  full_path <- paste0("https://github.com/scunning1975/mixtape/raw/master/",
+                      df)
+  haven::read_dta(full_path)
+}
+
+auto <-
+  read_data("auto.dta") %>%
+  mutate(length = length - mean(length))
+
+lm1 <- lm(price ~ length, auto)
+lm2 <- lm(price ~ length + weight + headroom + mpg, auto)
+lm_aux <- lm(length ~ weight + headroom + mpg, auto)
+auto <-
+  auto %>%
+  mutate(length_resid = residuals(lm_aux))
+
+lm2_alt <- lm(price ~ length_resid, auto)
+
+coef_lm1 <- lm1$coefficients
+coef_lm2_alt <- lm2_alt$coefficients
+resid_lm2 <- lm2$residuals
+
+y_single <- tibble(price = coef_lm2_alt[1] + coef_lm1[2]*auto$length_resid,
+                   length_resid = auto$length_resid)
+
+y_multi <- tibble(price = coef_lm2_alt[1] + coef_lm2_alt[2]*auto$length_resid,
+                  length_resid = auto$length_resid)
+```
+
+```{r reg-anatomy-tabela, warning=FALSE, message=FALSE, results='asis'}
+stargazer(lm1, lm2, type = "latex",
+          title = "Resultados das Regressões",
+          model.names = FALSE,
+          intercept.bottom = FALSE,
+          column.labels = c("Modelo 1", "Modelo 2"),
+          covariate.labels = c("Intercepto", "Comprimento", "Peso", "Altura Interna", "MPG"),
+          omit.stat = c("LL", "ser", "f"),
+          digits = 2)
+```
+
+
+```{r reg-anatomy-tabela1, warning=FALSE, message=FALSE, results='asis'}
+stargazer(lm2_alt, type = "latex",
+          title = "Resultado das Regressõe Resóiduo",
+          omit.stat = c("LL", "ser", "f"),
+          digits = 2)
+```
+```{r reg-anatomy-plot, warning=FALSE, message=FALSE}
+auto %>%
+  ggplot(aes(x=length_resid, y = price)) +
+  geom_point() +
+  geom_smooth(data = y_multi, color = "blue") +
+  geom_smooth(data = y_single, color = "red") +
+  annotate("text", x = Inf, y = Inf, label = "bivariada, inclinação 57.2", 
+           hjust = 1, vjust = 1, color = "red", size = 4, angle = 0) + # Anotação
+  annotate("text", x = 0, y = Inf, label = "multivariada, inclinação -94.5", 
+           hjust = 1, vjust = 1, color = "blue", size = 4, angle = 0)
+```
