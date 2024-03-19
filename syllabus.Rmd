@@ -23,7 +23,7 @@ O curso contará também com pelo menos duas aulas a serem dadas em conjunto com
 O pré-requisito é o curso FLS6183 - Métodos Quantitativos de Pesquisa II ou equivalente em outro departamento. Na prática, assumimos familiaridade com regressão linear e conhecimento básico de operadores como esperança matemática e operações básicas com matrizes e vetores. O curso usará a linguagem de programação R e pressupõe familiaridade básica com o software, incluindo como rodar regressões, manipulações de bancos de dados e utilização de Rmarkdown.
 
 ## Avaliação
-A avaliação consiste em exercícios (aproximadamente) semanais, que deverão ser entregues até o começo da aula seguinte e um trabalho final, que deverá ser uma replicação de algum artigo empírico que cubra alguns dos temas do curso ou trabalho original. Os trabalhos deverão conter um script em Rmarkdown, PDF e ser publicados no Github da autora, em formato HTML. Trabalhos co-autorados são fortemente encorajados, já que a colaboração é fundamental no trabalho científico. Naturalmente, a co-autoria implicará em maior expectativa de qualidade do trabalho final.
+A avaliação consiste em exercícios de estatística ou leitura de um texto a cada duas semanas, que deverão ser entregues até o começo da aula seguinte e um trabalho final, que deverá ser uma replicação de algum artigo empírico que cubra alguns dos temas do curso ou trabalho original. Os trabalhos deverão conter um script em Rmarkdown, PDF e ser publicados no Github da autora, em formato HTML. Trabalhos co-autorados são fortemente encorajados, já que a colaboração é fundamental no trabalho científico. Naturalmente, a co-autoria implicará em maior expectativa de qualidade do trabalho final.
 
 É esperado que, para cada aula, seja feita previamente a leitura obrigatória. A leitura opcional é recomendada que seja feita após a respectiva aula.
 
@@ -49,17 +49,18 @@ Cunningam_2021, Cap. 2
 
 ### Causalidade e Potential Outcomes
 Leitura obrigatória:
-Cunningam_2021, cap 3
+Cunningam_2021, cap 4
 
 ### Causalidade DAGs
 Leitura obrigatória:
-Cunningam_2021, cap 4.
+Cunningam_2021, cap 3
 
 Hernan_2020, Cap. 1, 6 e 7
 
 ### Experimentos
 
 Leitura obrigatória: Hernan_2020, Cap. 2; Blait_etal_2023, cap 2.
+
 https://blogs.worldbank.org/impactevaluations/declaring-and-diagnosing-research-designs
 
 Leitura opcional: 
