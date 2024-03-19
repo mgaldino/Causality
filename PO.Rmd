@@ -1,0 +1,62 @@
+---
+title: "PO"
+author: "Manoel Galdino"
+date: "2024-03-18"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Causalidade e Pesquisas Qualitativa
+
+Stuart Mill sugeriu que o estudo de causalidade poderia ser pensado a partir de cinco métodos (ou quatro métodos agrupados em cinco cânones^[Cf. Suzuki & Horita, 2023]) distintos: 1) método da concordância; 2) método da diferença; 3) método conjunto; 4) método da variação concomitante e 5) método dos resíduos. 
+
+EM sua época, noções de causalidade estavam associadas a relações lógicas, em particular de necessidade e suficiência, e associada, a noção de antecedente e consequente da lógica Aritotélica.
+
+Vamos apresentar essa noções rapidamente.
+
+Se $A \implies C$ e $B \implies C$, então podemos observar $C$ sem $B$ ou sem $A$. Portanto, dizemos apenas que $B$ (ou $A$) é suficiente para $C$. Por outro lado, $C$ é condição necessára para $A$, já que é impossível $A$ ser verdade e $C$ não.
+
+Também chamamos $A$ e $B$ de antecedente, e $C$ de consequente.
+O método da concordância diz
+
+> If two or more instances of the phenomenon
+under investigation have only one circumstance in common,
+the circumstance in which alone all the instances agree is the
+cause (or effect) of the given phenomenon. (p. 481)
+
+O método da diferença, de acordo com chatGPT, estabelece que:
+
+> Se um caso em que o fenômeno ocorre e outro em que não ocorre têm todas as circunstâncias em comum, exceto uma, que ocorre apenas no primeiro caso, então essa circunstância em que os dois casos diferem é a causa (ou efeito), ou parte da causa, do fenômeno.
+
+O terceiro método é a combinação dos dois anteriores, designado por método conjunto (da concordância e da diferença).
+
+O método dos resíduos é parecido com aquela citação do Conan Doyle, feita pelo personagem Sherlock Holmes:
+
+> When you have eliminated the impossible, whatever remains, however improbable, must be the truth.
+
+No caso do Mill, ele diz que após eliminar causas conhecidas de um fenômeno, o que restar deve ser explicado pela causa restante.
+
+Veja que todos os métodos anteriores pressupõe uma relação binária, isto é, ou o antecedente (ou consequente) está presente ou não.
+
+Por fim, o método da variação concomitante
+
+Como nós veremos mais ao final do curso, esses métodos do Mill são bastante parecidos com os métodos sugeridos pela literatura de Procss Tracing pré-Bayesiana.
+
+O método do Mill pressupõe, por ser baseado em relações lóicas de necessidade e suficência, relações causais determinísticas ^[cf. Lieberson (1991) para uma visão mais aprofundada dos pressupostos de estudos com "n" pequeno com o método de Mill].
+
+### Tradição experimental
+
+A ciência política possui uma longa tradição de conduzir experimentos para investigar relações de causa e efeito. De acordo com o survey de Bositis & Steinel (1987), o primeiro experimento em ciência política foi conduzido por Harold Gosnell (1927), que estuou se envio de mensagens pelo correio impactavam registro e comporacimento eleitoral nas eleições em Chicado de 1924 e 1925.
+
+## Referências
+
+Bositis, D. A., & Steinel, D. (1987). A synoptic history and typology of experimental research in political science. Political Behavior, 9, 263-284.
+
+Gosnell, H. F. (1927). Getting out the vote. Chicago: University of Chicago Press.
+
+Lieberson, S. (1991). Small N's and big conclusions: an examination of the reasoning in comparative studies based on a small number of cases. Social forces, 70(2), 307-320.
+
+Suzuki, T., & Horita, M. (2023). Revisiting JS Mill’s Methods: Causal Inference and Social Choice Theory. Available at SSRN 4603153.
