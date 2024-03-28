@@ -1,0 +1,120 @@
+---
+title: "PO"
+author: "Manoel Galdino"
+date: "2024-03-18"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Causalidade e Pesquisas Qualitativa
+
+Stuart Mill sugeriu que o estudo de causalidade poderia ser pensado a partir de cinco métodos (ou quatro métodos agrupados em cinco cânones^[Cf. Suzuki & Horita, 2023]) distintos: 1) método da concordância; 2) método da diferença; 3) método conjunto; 4) método da variação concomitante e 5) método dos resíduos. 
+
+EM sua época, noções de causalidade estavam associadas a relações lógicas, em particular de necessidade e suficiência. E na teoria do silogismo, utiliza-se muito a noção de antecedente e consequente da lógica Aritotélica.
+
+Vamos apresentar essa noções rapidamente.
+
+Se $A \implies C$ e $B \implies C$, então podemos observar $C$ sem $B$ ou sem $A$. Portanto, dizemos apenas que $B$ (ou $A$) é suficiente para $C$. Por outro lado, $C$ é condição necessára para $A$, já que é impossível $A$ ser verdade e $C$ não.
+
+Também chamamos $A$ e $B$ de antecedente, e $C$ de consequente.
+O método da concordância diz
+
+> If two or more instances of the phenomenon
+under investigation have only one circumstance in common,
+the circumstance in which alone all the instances agree is the
+cause (or effect) of the given phenomenon. (p. 481)
+
+O método da diferença, de acordo com chatGPT, estabelece que:
+
+> Se um caso em que o fenômeno ocorre e outro em que não ocorre têm todas as circunstâncias em comum, exceto uma, que ocorre apenas no primeiro caso, então essa circunstância em que os dois casos diferem é a causa (ou efeito), ou parte da causa, do fenômeno.
+
+O terceiro método é a combinação dos dois anteriores, designado por método conjunto (da concordância e da diferença).
+
+O método dos resíduos é parecido com aquela citação do Conan Doyle, feita pelo personagem Sherlock Holmes:
+
+> When you have eliminated the impossible, whatever remains, however improbable, must be the truth.
+
+No caso do Mill, ele diz que após eliminar causas conhecidas de um fenômeno, o que restar deve ser explicado pela causa restante.
+
+Veja que todos os métodos anteriores pressupõem uma relação binária, isto é, ou o antecedente (ou consequente) está presente ou não.
+
+Por fim, o método da variação concomitante
+
+Como nós veremos mais ao final do curso, esses métodos do Mill são bastante parecidos com os métodos sugeridos pela literatura de Procss Tracing pré-Bayesiana.
+
+O método do Mill pressupõe, por ser baseado em relações lóicas de necessidade e suficência, relações causais determinísticas ^[cf. Lieberson (1991) para uma visão mais aprofundada dos pressupostos de estudos com "n" pequeno com o método de Mill].
+
+### Tradição experimental
+
+A ciência política possui uma longa tradição de conduzir experimentos para investigar relações de causa e efeito. De acordo com o survey de Bositis & Steinel (1987), o primeiro experimento em ciência política foi conduzido por Harold Gosnell (1927), que estudou se envio de mensagens pelo correio impactava o registro e comparecimento eleitoral nas eleições em Chicago de 1924 e 1925.
+
+Esse estudo pioneiro precede, até onde sei, experimentos feitos na economia e são contemporâneos da tradição que surgiu na estatística com o Fisher.
+Entretanto, com poucas exceções, a tradição experimental pouco avançou na Ciência Política, até a virada dos anos 2000, quando ela ressurge, em parte por influência dos experimentos realizados na economia^[Cf.Bositis & Steinel (1987) e Kinder & Palfrey (1993), para uma visão histórica da tradição experimental até os anos 90 e, mais recentemente, Druckman et. al. (2011)].
+
+E por que experimentos são tão importante? A notação de Resultados Potenciais, introduzida por Neyman (1923) e redescoberta e transformada por Rubin (1974), deixa bem claro porque experimentos são centrais para a investigação causal.
+
+## Resultados Potenciais
+
+Na tradição de resultados potenciais, causalidade é entendida a partir da comparação entre dois estados do mundo.
+
+### Diferença em resultados potenciais
+
+Vamos supor que temos $10$ países e pudemos observar a renda per capita dos países (em milhares de dólares). Considere um "tratamento" binário que é o país ser democrático ou não (tal como definido pela tradição minimalista, de eleições competitivas). Se fosse possível observar os dois resultados potenciais para os dez países, teríamos uma tabela mais ou menos assim:
+
+Podemos calcular o efeito médio do tratamento se tivermos essa tabela de dados, porque o efeito médio do tratamento é simplesmente a diferença média entre as colunas $Y^1$ e $Y^0$. Ou seja, a diferença entre $\mathbb{E}[Y^1] = 5.6$  $\mathbb{E}[Y^0] = 5$, o que dá um ATE de $0.6$. E nós interpretamos isso como o efeito causal médio de um país ser uma democracia comparado com uma ditadura é de aumentar a renda per capital em 0.6 mil dólares.
+
+Vejam que a democracia não é benéfica para todos os países. Em alguns casos, o efeito causal é negativo. Na linguagem de causalidade, dizemos que o efeito causal é heterogêneo entre as unidades.
+
+Vale notar que, uma vez que não há atribuição de tratamento e controle para os países, isto é, estamos falando apenas de resultados potenciais, não posso calcular o ATT nem o ATU. Para isso, é necessário que de algum modo a alocação para tratamento e controle seja feita e nós possamos observar os resultados em cada caso (isto é, das unidades no tratamento e no controle).
+
+Agora, vamos supor que as elites políticas dos países sabem qual instituição é melhor para seu próprio país e escolhe o regime político que gera a maior renda per capita. E vamos supor que agora nós só observamos o resultado correspondente ao regime político escolhido pelas elites do país, isto é, de acordo com a equação que conecta resultados potenciais e observados.
+
+A tabela x mostra apenas os resultados observados para o tratamento ou controle, e não mais os resultados potenciais. Considerando ainda a tabela com resultados potenciais, mas utilizando a atribuição de tratamento e controle feita pelas elites, podemos calcular o ATT e ATU. Lembrando que:
+
+$$
+ATT = \mathbb{E}[Y^1|D=1] - \mathbb{E}[Y^0|D=1]
+$$
+e
+
+$$
+ATU = \mathbb{E}[Y^1|D=0] - \mathbb{E}[Y^0|D=0]
+$$
+O ATT é, portanto, $(7+5+4+10+9)/5 - (1+1+2+1+8)/5 = 4.4$. E o ATU é $(5+7+1+5+3)/5 - (6+8+10+6+7)/5 = -3.2$
+
+Veja que, usando a LIE, podemos redefinir o ATE como a média ponderada do ATT e ATU do seguinte modo:
+
+\begin{equation}
+ATT = \mathbb{E}[Y^1] - \mathbb{E}[Y^0] \\
+\text{Pela Lei das Esperanças Iteradas, sabemos que se X for uma variável binária, então:} \\
+
+\mathbb{E}[Y] = \mathbb{E}[\mathbb{E}[Y|X]] = \mathbb{E}[Y|X=1]P(X=1) + \mathbb{E}[Y|X=0]P(X=0)\\
+\text{Aplicando essa lógica para o ATE, temos:} \\
+\mathbb{E}[Y^1] - \mathbb{E}[Y^0] = (\mathbb{E}[Y^1|X=1] - \mathbb{E}[Y^0|X=1])P(X=1) + (\mathbb{E}[Y^1|X=0] - \mathbb{E}[Y^0|X=0])P(X=0) = \\
+\mathbb{E}[Y^1] - \mathbb{E}[Y^0] = ATT P(X=1) + ATU P(X=0) = \\
+ATE = ATT P(X=1) + ATU P(X=0) 
+\end{equation}
+
+O que acontece se fôssemos utilizar essa tabela para calcular o efeito causal médio comparando $\mathbb{E}[Y^{\text{observado}}|D=1] - \mathbb{E}[Y^{\text{observado}}|D=0]$? Nossa estimativa do ATE seria portanto a diferença entre o ATT e o ATU, isto é.
+
+
+
+## Referências
+
+Bositis, D. A., & Steinel, D. (1987). A synoptic history and typology of experimental research in political science. Political Behavior, 9, 263-284.
+
+Druckman, J. N., Green, D. P., Kuklinski, J. H., & Lupia, A. (2011). Experimentation in political science. Cambridge handbook of experimental political science, 3-11.
+
+Gosnell, H. F. (1927). Getting out the vote. Chicago: University of Chicago Press.
+
+Kinder, D. R., & Palfrey, T. R. (1993). On behalf of an experimental political science. Experimental foundations of political science, 1-39.
+
+Lieberson, S. (1991). Small N's and big conclusions: an examination of the reasoning in comparative studies based on a small number of cases. Social forces, 70(2), 307-320.
+
+Rubin, Donald. 1974. “Estimating Causal Effects of Treatments in Randominzed and Nonrandomized Studies.” Journal of Educational Psychology 66 (5): 688–701.
+
+Splawa-Neyman, Jerzy. 1923. “On the Application of Probability Theory to Agricultural Experiments. Essay on Principles.” Annals of Agricultural Sciences, 1–51.
+
+Suzuki, T., & Horita, M. (2023). Revisiting JS Mill’s Methods: Causal Inference and Social Choice Theory. Available at SSRN 4603153.
