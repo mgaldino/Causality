@@ -9,22 +9,25 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Causalidade
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+![Fonte: xkcd](path/to/your/image.jpg) <!-- Substitua path/to/your/image.jpg pelo caminho da imagem XKCD sobre causalidade -->
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Introdução
 
-```{r cars}
-summary(cars)
-```
+Uma das principais abordagens para fazer inferência causal utiliza diagramas causais chamados de Directed Acyclic Graphs (DAG). Ela foi desenvolvida na ciência da computação entre os anos 80 e 90 e é associada com o trabalho pioneiro de Judea Pearl. Veja o livro *The Book of Why* para uma história de como surgiu essa abordagem.
 
-## Including Plots
+Abaixo temos um exemplo simples de um DAG:
 
-You can also embed plots, for example:
+![Exemplo simples de um DAG](path/to/your/dag_example.jpg) <!-- Substitua path/to/your/dag_example.jpg pelo caminho da imagem do exemplo de um DAG -->
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+Eles são chamados de DAG porque os gráficos são direcionados (apontam em uma direção), acyclic porque não permitem ciclos (isto é, se A causa B, B não pode causar A) e graphs porque, como você pode imaginar, são gráficos.
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+No exemplo acima, o DAG é formado por três variáveis \{y, x, z\} que são, em geral, variáveis aleatórias. E as flechas indicam direção de causalidade. Ou seja, x causa y e z causa x. É importante saber que DAGs são não paramétricos. Eles podem ser interpretados como: $y = f(x, z)$. Ou seja, qualquer função de x e z são igualmente possíveis. Eis alguns exemplos compatíveis com o DAG acima:
+
+- $y = x + z$
+- $y = 10 + x + z + x*z$
+- $y = 3*x^z$
+- $y = \pi*z/x + x^2 + 1/(z^3)$
+
+A razão porque não escrevemos DAGs como equações é porque $y = f(x, z)$ não expressa adequadamente a relação de causalidade pois, em matemática, é indiferente escrever $f(x, z) = y$ ou $y = f(z, x)$. Porém, dizer que x e z causam y é muito diferente de dizer que y causa x e z. E com o DAG, as flechas indicam a direção da causalidade.

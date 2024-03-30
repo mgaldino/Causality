@@ -1,152 +1,75 @@
 ---
-title: "Programa - FLS 6441 - Métodos III: Causação e Explicação"
+title: "Essentials of Multiple Regression Analysis"
 author: "Manoel Galdino"
 date: "2023-12-03"
 output: 
-  pdf_document:
-    number_sections: true
+  pdf_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Descrição do Curso
+# IPSA-USP Summer School in Concepts and Methods in Political Science and International Relations 
 
-Este é o terceiro curso na sequência de métodos quantitativos da pós-graduação em ciência política da Universidade de São Paulo. O objetivo é fornecer um survey das principais técnicas de inferência causal em trabalhos empíricos, incluindo uma rápida discussão sobre novas metodologias causais para trabalhos qualitativos. O curso se concentra em questões de pesquisa causal baseadas no desenho de pesquisas causais, isto é, questões de pesquisa que buscam recuperar o efeito causal de uma intervenção ou tratamento em alguma variável resposta de interesse.
+## Course Description
 
-Tópicos cobertos pelo curso incluem métodos experimentais, variáveis instrumentais, desenho de regressão descontínua, matching, diferença em diferenças e modelos causais estruturais com DAGs. Dependendo do tempo, poderemos aprofundar nas novas técnicas para estudos dif-in-diff (staggered treatment), ferramentas de machine learning para inferência causal e análise de sensibilidade.
+This course is designed for students who are interested in reviewing their training in multiple regression analysis. It will take place in the third week of the Summer School. The intensive course starts with a brief review of random variables, expectation and conditional expectation, and a discussion of the logic of the multiple regression model. Particular emphasis will be given to inference, to interpretation of coefficients and to interaction terms. Therefore, we focus on the logic behind a populational regression model and its relation to the sample regression model as a way to discuss inference, its results, and its limits. Also, we briefly debate the basic assumptions’ violation. At last, we discuss the basic idea of interactions, how to correct interpret the coefficients, and the most common mistakes. Similar to other IPSA-USP courses, the Essentials of Multiple Regressions Analysis takes a “hands on” approach. To complement lectures, students apply the concepts taught in lectures to analyze problems using the R software packages/programming language.
 
-O curso contará também com pelo menos duas aulas a serem dadas em conjunto com a disciplina de métodos qualitativos ministrada pela professora Elizabeth Balbachevski, para discutirmos causalidade dos dois pontos de vista e também para discutirmos como utilizar process tracing para investigação causal.
-## Pré-requisitos
+## PREREQUISITES
 
-O pré-requisito é o curso FLS6183 - Métodos Quantitativos de Pesquisa II ou equivalente em outro departamento. Na prática, assumimos familiaridade com regressão linear e conhecimento básico de operadores como esperança matemática e operações básicas com matrizes e vetores. O curso usará a linguagem de programação R e pressupõe familiaridade básica com o software, incluindo como rodar regressões, manipulações de bancos de dados e utilização de Rmarkdown.
+The course presumes students have some basic training in mathematics including arithmetic and algebra operations. It also assumes that students have a background in statistics including basic probability; random variables and their distributions; confidence intervals and tests of hypotheses for means, variances, and proportions from one or two populations.
 
-## Avaliação
-A avaliação consiste em exercícios (aproximadamente) semanais, que deverão ser entregues até o começo da aula seguinte e um trabalho final, que deverá ser uma replicação de algum artigo empírico que cubra alguns dos temas do curso ou trabalho original. Os trabalhos deverão conter um script em Rmarkdown, PDF e ser publicados no Github da autora, em formato HTML. Trabalhos co-autorados são fortemente encorajados, já que a colaboração é fundamental no trabalho científico. Naturalmente, a co-autoria implicará em maior expectativa de qualidade do trabalho final.
 
-É esperado que, para cada aula, seja feita previamente a leitura obrigatória. A leitura opcional é recomendada que seja feita após a respectiva aula.
+## DATES
+This course runs January from 29 to February 2nd, 2024.
 
-## Materiais para o curso
-No geral, vamos seguir o livro do Scott Cunningham (Cunningham_2021), Causal Inference: The Mix Tape. Disponível gratuitamente em https://mixtape.scunning.com/. Abaixo apresento uma lista de outros livros, que ajudarão a compor as aulas em determinados momentos e vale a pena você dar uma olhada.
+## DETAILED DESCRIPTION
+This course departs from the premise that the most effective way to learn multiple regression is by actively using the concepts discussed in class to solve problems. For each topic, we will have lectures that will be followed by sessions in which students will use empirical data to answer questions that are important to political scientists. For those students who will be studying multiple regression analysis in the IPSA-USP Summer School, the course will provide an intuitive and basic review of linear regression in theory and practice.  
 
-Hernan_2020: Hernan MA, Robins JM (2020). Causal Inference:
-What If. Boca Raton: Chapman & Hall/CRC. Disponíovel em: https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/
+In the afternoon, classes will be focused on lab activities.
 
-Blait_etal_2023: Blair, G., Coppock, A., & Humphreys, M. (2023). Research Design in the Social Sciences: Declaration, Diagnosis, and Redesign. Princeton University Press. Disponível em: https://book.declaredesign.org/
+Teaching Assistant
+Luiz Antonio Couto Soares, Universidade de São Paulo
 
-Angrist J. and J.S. Pischke. (2008). Mostly Harmless Econometrics: An Empiricist’s Companion. Princeton University Press.
 
-Gerber, A. S., and Green, D. P. (2012). Field experiments: Design, analysis, and interpretation. WW Norton.
+## REQUIRED READINGS
 
-## Agenda Preliminar
+Wooldridge, Jeffrey. 2018. Introductory Econometrics: A Modern Approach, 7th Edition.
 
-Como essa é a primeira vez que estou dando esse curso, a sequência de aulas é preliminar. Ajustes deverão ser feitos ao longo do curso, a depender dos interesses e demandas das estudantes.
+Hansen, B. (2022). Econometrics. Princeton University Press.
 
-### Apresentação do curso, revisão de regressão linear
-Leitura obrigatória:
-Cunningam_2021, Cap. 2
+Shalizi, C. R. (2015). The Truth About Linear Regression. Online Manuscript. http://www.stat.cmu.edu/~cshalizi/TALR.
 
-### Causalidade e Potential Outcomes
-Leitura obrigatória:
-Cunningam_2021, cap 3
+Gelman, A., Hill, J., & Vehtari, A. (2020). Regression and other stories. Cambridge University Press.
 
-### Causalidade DAGs
-Leitura obrigatória:
-Cunningam_2021, cap 4.
+## FURTHER READINGS
 
-Hernan_2020, Cap. 1, 6 e 7
+Larsen, E. G., & Fazekas, Z. (2021). Quantitative Politics with R. Link: http://qpolr.com
 
-### Experimentos
+Moore, William H. & David A. Siegel . 2013. A Mathematics Course for Political & Social Research. Princeton University Press.
 
-Leitura obrigatória: Hernan_2020, Cap. 2; Blait_etal_2023, cap 2.
-https://blogs.worldbank.org/impactevaluations/declaring-and-diagnosing-research-designs
+Stock, J. H., & Watson, M. W. (2020). Introduction to econometrics 4th ed.
 
-Leitura opcional: 
-Gerber, A. S., and Green, D. P. (2012). Field experiments: Design, analysis, and interpretation. WW Norton. Cap. 3 e 4.
+Wickham, H., & Grolemund, G. (2016). R for data science: import, tidy, transform, visualize, and model data. O’Reilly Media, Inc..
 
-McClendon, G. H. (2014). Social esteem and participation in contentious politics: A field
-experiment at an LGBT pride rally. American Journal of Political Science, 58(2), 279-290.
+## SCHEDULE
 
-### Causalidade com seleção em observáveis (Critério de Back-door, subclassificação e matching)
+### Day 1, Statistics and Probability Review and Introduction to Linear Regression
 
-Leituras obrigatórias:
-Cunningam_2021, cap 5.
+Wooldridge, Math Refresher B.
+Hansen, chap. 2
 
-Hernan_2020, Cap. 7 e 15
+### Day 2, The Linear Regression Model with a Single Predictor
+Hansen, chap. 2
+Shalizi, chaps. 3 and 4
 
-Rubin, D. B. (2008). For Objective Causal Inference, Design Trumps Analysis. The Annals of Applied Statistics, 808-840.
+### Day 3, Assumptions of the Linear Regression
+Shalizi, chap. 6
+Hansen, chap. 2
 
-Elizabeth A. Stuart. "Matching Methods for Causal Inference: A Review and a Look Forward." Statist. Sci. 25 (1) 1 - 21, February 2010. https://doi.org/10.1214/09-STS313
+### Day 4, Inference
+Shalizi, chap. 6
 
-Sekhon, J. S. (2009). Opiates for the matches: Matching methods for causal inference. Annual Review of Political Science, 12, 487-508.
-
-Leituras opcionais
-
-Gilligan, M. J., & Sergenti, E. J. (2008). Do UN interventions cause peace? Using matching to improve causal inference. Quarterly Journal of Political Science, 3(2), 89-122.
-
-Schaefer, B. M., & Figueiredo Filho, D. B. (2023). Deu match? Uma introdução às técnicas de pareamento. Revista Brasileira de Ciências Sociais, 38, e3811039.
-
-### Variáveis instrumentais
-Leitura obrigatória: 
-Cunningam_2021, cap. 7.
-
-Sovey, A. J., and Green, D. P. (2011). Instrumental variables estimation in political science:
-A readers’ guide. American Journal of Political Science, 55(1), 188-200.
-
-Kristopher W. Ramsay. 2011. “Revisiting the Resource Curse: Natural Disasters, the Price of
-Oil, and Democracy.” International Organization 65.
-
-Leitura opcional: 
-Hernan_2020: cap 16.
-
-Cinelli, C., & Hazlett, C. (2022). An omitted variable bias framework for sensitivity analysis of instrumental variables. Available at SSRN 4217915.
-
-###  Regressão Discontínua
-Leitura obrigatória:  Cunningam_2021, cap. 6. 
-
-Imbens, Guido W., and Thomas Lemieux. 2008. Regression Discontinuity Designs: A Guide to
-Practice. Journal of Econometrics 142 (2): 615-35.
-
-Boas, T. C., Hidalgo, F. D., & Richardson, N. P. (2014). The spoils of victory: campaign donations and government contracts in Brazil. The Journal of Politics, 76(2), 415-429.
-
-Leitura opcional: De la Cuesta, B., & Imai, K. (2016). Misunderstandings about the regression discontinuity design in the study of close elections. Annual Review of Political Science, 19, 375-396.
-
-Marshall, J. (2022). Can close election regression discontinuity designs identify effects of winning politician characteristics?. American Journal of Political Science.
-
-### Dif in Dif
-Cunningam_2021, cap. 9. 
-
-Bertrand, M., Duflo, E., & Mullainathan, S. (2004). How much should we trust differences-in-differences estimates?. The Quarterly journal of economics, 119(1), 249-275.
-
-Silva, G. P. D. (2017). Same institutions, same outcomes? Comparing the effect of electoral competition on the level of concentration of votes. Opinião Pública, 23(3), 682-713.
-
-### Dados em Painel
-
-Cunningam_2021, cap. 8.
-
-Hernan_2020: cap 19.
-
-Lucardi, A., & Micozzi, J. P. (2022). District magnitude and female representation: evidence from Argentina and Latin America. American Journal of Political Science, 66(2), 318-336.
-
-### Process Tracing Bayesiano
-
-Fairfield, T., & Charman, A. E. (2022). Social inquiry and Bayesian inference: Rethinking qualitative research. Cambridge University Press.
-
-Rabbia, M. (2023). Why did Argentina and Uruguay decide to pursue a carbon tax? Fiscal reforms and explicit carbon prices. Review of Policy Research, 40(2), 230-259.
-
-### Queries causais em DAGs com dados qualitativos
-Humphreys, M., & Jacobs, A. M. (2023). Integrating Inferences: Causal Models for Qualitative and Mixed-Method Research. Cambridge University Press.
-
-Galdino, M., Mondo, B. V., Sakai, J. M., & Paiva, N. (2023). The Civil Society Organizations effect: A mixed-methods analysis of bottom-up approaches in Brazilian public policy.
-
-### Tópicos Especiais
-
-#### Machine Learning e Econometria
-Belloni, A., Chernozhukov, V., & Hansen, C. (2014). Inference on treatment effects after selection among high-dimensional controls. Review of Economic Studies, 81(2), 608-650.
-
-Mullainathan, S., & Spiess, J. (2017). Machine learning: an applied econometric approach. Journal of Economic Perspectives, 31(2), 87-106.
-
-Athey, S., & Imbens, G. W. (2019). Machine learning methods that economists should know about. Annual Review of Economics, 11, 685-725.
-
-Grimmer, J., Roberts, M. E., & Stewart, B. M. (2021). Machine learning for social science: An agnostic approach. Annual Review of Political Science, 24, 395-419.
+### Day 5, Multiple Regression
+Shalizi, chap. 12, 13 and 14.

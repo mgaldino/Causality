@@ -51,11 +51,97 @@ O método do Mill pressupõe, por ser baseado em relações lóicas de necessida
 
 A ciência política possui uma longa tradição de conduzir experimentos para investigar relações de causa e efeito. De acordo com o survey de Bositis & Steinel (1987), o primeiro experimento em ciência política foi conduzido por Harold Gosnell (1927), que estuou se envio de mensagens pelo correio impactavam registro e comporacimento eleitoral nas eleições em Chicado de 1924 e 1925.
 
+## Potential Outcomes
+
+Digamos que estamos interessados em estimar o efeito causal de envio ou não de mensagens informando sobre a importância do voto sobre o comparecimento eleitoral. Nós vamos designar por tratamento nossa variável binária se uma mensagem foi ou não enviada e ela assum valor $1$ se uma eleitora recebeu a mensagem e $0$ caso não tenha recebido. Cada eleitora possui dois resultados ponteciais, mas apenas um resultado observado. Os Resultados Potenciais são definidos como $Y_i^1$ se a eleitora $i$ recebeu o tratamento e $Y_i^0$ se a eleitora $i$ não recebeu o tratamento. Isso é verdade para todas eleitoras $i$ e só podemos observar um desses resultados para cada eleitora (não ambos).
+
+Para distinguir resultados potenciais de resultados observados, nossa notação é expressa do seguinte modo. Temos apenas dois resultados potenciais para cada eleitora $i$, $Y_i^1$ e $Y_i^0$. Por outro lado, temos apenas um resultado observado para cada eleitora $i$, $Y_i$. Vejam que nos resultados observados não há sobreescrito. Isso indica que não são resultados potenciais, mas observados, efetivos, que acontecem na realidade. Já resultados potenciais são hipotéticos.
+
+Seja $D_i$ uma variável que indica se a unidade (eleitora) recebeu o tratamento ou não.
+
+O mundo factual (observado) pode ser descrito em termos dos resultados potenciais pela eqquação abaixo. É importante enfatizar que essa equação conecta os resultados observados com os resultados potenciais. Repetindo o que dissemos antes, note também a diferença de notação entre um resultado observado (indexado apenas o indivíduo $i$) e um potencial (indexado para o indivíduo $i$ e para o tratamento potencialmente recebido).
+
+
+\begin{equation}
+\tag{1}
+Y_i = Y_i^0 + (Y_i^1 - Y_i^0)*D_i
+\end{equation}
+
+Quando $D_i=1$, $Y_i = Y_i^0 + Y_i^1 - Y_i^0 = Y_i^1 $, ou seja, quando a unidade $i$ recebe o tratamento, o resultado observado $Y_i$ é igual ao resultado potencial $Y_i^1$. Por outro lado, quando $D_i = 0$, $Y_i = Y_i^0$, ou seja, o resultado observado é igual ao potencial sem tratamento. Veja que nós podemos observar um dos dois resultados potenciais (mas não ambos) para cada indivíduo $i$.
+
+Implícito nessa equação está um pressuposto, chamado de consistência, que diz que o tratamento deve ser definido de maneira não-ambígua. 
+
+Um exemplo de tratamento que pode ser definido de maneira ambígua é o de incumbência. Digamos que quero medir o efeto causal da incumbência, que é um tratamento binário. Tenho portanto, a princípio, dois resultados potenciais $Y_i^1$ e $Y_i^0$. Contudo, se na prática tenho dois tipos de incumbência, do candidato e do partido, então tenho na verdade três resultados potenciais em vez de dois, pois tenho dois tratamentos e um controle. De maneira geral, o pressuposto da consistência é violado quando há muitas maneiras distintas de implementar um tratamento conceitual. Isso é claro quando pensamos, por exemplo no efeito causal da massa corporal sobre algum indicador de saúde. Podemos reduzir a massa corporal com remédios (como Ozempic), dieta, exercício físicos, cirurgia bariátrica etc. E é possível que cada um desses tratamentos possua efeitos causais distintos, de modo que o tratamento abstrato "reduzir massa corporal" é mais complicado. O mesmo vale para efeito causal de gênero, raça etc.
+
+Portanto, ainda que exista muitas maneiras pela qual o tratamento pode ser implementado, todas devem ter o mesmo resultado potencial, se a suposição de consistência for válida.
+
+Assim, podemos formular consistência (Cole & Frangakis, 2009) como:
+
+$$
+Y_i^{\text{observado}} = Y_i^{D,k} \text{ se D = D_i, para todo } k
+$$
+O que essa equação nos diz é que o resultado observado (e coloquei observado no sobrescrito para enfatizar, o que não é estritamente necessário em nossa notação) é igual ao resultado potencial de cada valor do tratamento $D$ e para todas as formas de implementação do tratamento $k$.
+
+
+Utilizando esta notação, podemos definir o efeito causal ao nível da unidade como:
+$$
+\delta_i = Y_i^1 - Y_i^0
+$$
+A equação $1$ me diz que eu só posso observar um dos resultados potenciais para cada indivíduo. De forma que, nesse caso, é impossível determinar $\delta_i$. Este problema foi chamado por Holland (1986) de "problema fundamental da inferência causal".
+
+### Average Treatment Effects (ATE)
+
+Se em geral não podemos observar o efeito causal individual, o que dizer do efeito causal médio? Vamos definir o ATE (ao nível da população) como:
+
+\begin{equation}
+\tag{2}
+ATE \coloneq \mathbb{E}[delta_i] = \\
+\mathbb{E}[Y_i^1 - Y_i^0] = \\
+\mathbb{E}[Y_i^1] - \mathbb{E}[Y_i^0]
+\end{equation}
+
+Veja que nossa definição do ATE, do mesmo jeito que a definição do efeito causal individual, requer a observação de ambos resultados potenciais. Portanto, é um parâmetro também não observável diretamente. O máximo que podemos fazer (mesmo na população) é estimar o parâmetro.
+
+### Average Treatment effect for the Treated (ATT)
+
+O próximo parâmetro de interesse que iremos definir é o ATT. Basicamente, é o efeito causal médio para as unidades que receberam o tratamento, isto é, excluímos de consideração as unidades no grupo controle. A princípio, não há razão para supor que o ATT será igual ao ATE. Em particular em dados observacionais típicos de ciência política, em que as pessoas escolhem se vão receber o tratamento ou não, deve haver diferenças entre o ATT e o ATE. Em nossos dois exemplos discutidos até agora, é fácil perceber que campanhas políticas devem mandar mensagens de campanha para eleitores mais sucetíveis de serem impactados por mensagens. E políticos que decidem tentar a reeleição tendem a ser diferentes de políticos que não-buscam a reeleição. Em ambos os casos, isso deve causal efeitos causais individuais diferentes entre o grupo dos tratados e do controle, tornando o ATT diferente do ATE.
+
+\begin{equation}
+\tag{2}
+ATT \coloneq \mathbb{E}[delta_i|D_i=1] = \\
+\mathbb{E}[Y_i^1 - Y_i^0|D_i=1] = \\
+\mathbb{E}[Y_i^1|D_i=1] - \mathbb{E}[Y_i^0|D_i=1]
+\end{equation}
+
+A equação 1 conecta resultados observados com resultados potenciais. Isso é particularmente útil quando quisermos estimar o efeito causal a partir de dados observacionais. 
+
+Digamos que queremos computar a média percentual de votação conforme indicação do governo para deputados da base e fora da base. Isso é dado pela equação 8.2 abaixo.
+
+\begin{equation}
+\tag{8.2}
+\mathbb{E}[Y_{i}|B_i = 1] - \mathbb{E}[Y_{i}| B_i = 0] 
+\end{equation}
+
+Veja que por enquanto estamos tratando apenas de dados observados e, portanto, não podemos falar de dados potenciais. Contudo, se a suposição de consistência for válida, podemos utilizar a equação 8.1 para conectar o factual e o contrafactual.
+
+\begin{equation}
+\begin{aligned}
+\mathbb{E}[Y_{i}|B_i = 1] =  \mathbb{E}([Y_{0i} + (Y_{1i} - Y_{0i})*B_i)|B_i=1] \\
+
+\mathbb{E}[Y_{i}|B_i = 1] =  \mathbb{E}[(Y_{0i} + (Y_{1i} - Y_{0i})*1)|B_i=1] \\
+
+\mathbb{E}[Y_{i}|B_i = 1] =  \mathbb{E}[Y_{1i}|B_i=1]
+\end{aligned}
+\end{equation}
 ## Referências
 
 Bositis, D. A., & Steinel, D. (1987). A synoptic history and typology of experimental research in political science. Political Behavior, 9, 263-284.
 
+Cole, S. R., & Frangakis, C. E. (2009). The consistency statement in causal inference: a definition or an assumption?. Epidemiology, 20(1), 3-5.
+
 Gosnell, H. F. (1927). Getting out the vote. Chicago: University of Chicago Press.
+
+Holland, P. W. (1986). Statistics and causal inference. Journal of the American statistical Association, 81(396), 945-960.
 
 Lieberson, S. (1991). Small N's and big conclusions: an examination of the reasoning in comparative studies based on a small number of cases. Social forces, 70(2), 307-320.
 
