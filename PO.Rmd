@@ -3,6 +3,9 @@ title: "PO"
 author: "Manoel Galdino"
 date: "2024-03-18"
 output: pdf_document
+header-includes:
+  - \usepackage{mathtools}
+  - \usepackage{amssymb}
 ---
 
 ```{r setup, include=FALSE}
@@ -67,7 +70,7 @@ O mundo factual (observado) pode ser descrito em termos dos resultados potenciai
 Y_i = Y_i^0 + (Y_i^1 - Y_i^0)*D_i
 \end{equation}
 
-Quando $D_i=1$, $Y_i = Y_i^0 + Y_i^1 - Y_i^0 = Y_i^1 $, ou seja, quando a unidade $i$ recebe o tratamento, o resultado observado $Y_i$ é igual ao resultado potencial $Y_i^1$. Por outro lado, quando $D_i = 0$, $Y_i = Y_i^0$, ou seja, o resultado observado é igual ao potencial sem tratamento. Veja que nós podemos observar um dos dois resultados potenciais (mas não ambos) para cada indivíduo $i$.
+Quando $D_i=1$, $Y_i = Y_i^0 + Y_i^1 - Y_i^0 = Y_i^1$, ou seja, quando a unidade $i$ recebe o tratamento, o resultado observado $Y_i$ é igual ao resultado potencial $Y_i^1$. Por outro lado, quando $D_i = 0$, $Y_i = Y_i^0$, ou seja, o resultado observado é igual ao potencial sem tratamento. Veja que nós podemos observar um dos dois resultados potenciais (mas não ambos) para cada indivíduo $i$.
 
 Implícito nessa equação está um pressuposto, chamado de consistência, que diz que o tratamento deve ser definido de maneira não-ambígua. 
 
@@ -78,8 +81,10 @@ Portanto, ainda que exista muitas maneiras pela qual o tratamento pode ser imple
 Assim, podemos formular consistência (Cole & Frangakis, 2009) como:
 
 $$
-Y_i^{\text{observado}} = Y_i^{D,k} \text{ se D = D_i, para todo } k
+Y_i^{\text{observado}} = Y_i^{D,k} \quad \text{se } D = D_i, \text{ para todo } k
 $$
+
+
 O que essa equação nos diz é que o resultado observado (e coloquei observado no sobrescrito para enfatizar, o que não é estritamente necessário em nossa notação) é igual ao resultado potencial de cada valor do tratamento $D$ e para todas as formas de implementação do tratamento $k$.
 
 
@@ -87,6 +92,7 @@ Utilizando esta notação, podemos definir o efeito causal ao nível da unidade 
 $$
 \delta_i = Y_i^1 - Y_i^0
 $$
+
 A equação $1$ me diz que eu só posso observar um dos resultados potenciais para cada indivíduo. De forma que, nesse caso, é impossível determinar $\delta_i$. Este problema foi chamado por Holland (1986) de "problema fundamental da inferência causal".
 
 ### Average Treatment Effects (ATE)
@@ -127,12 +133,101 @@ Veja que por enquanto estamos tratando apenas de dados observados e, portanto, n
 \begin{equation}
 \begin{aligned}
 \mathbb{E}[Y_{i}|B_i = 1] =  \mathbb{E}([Y_{0i} + (Y_{1i} - Y_{0i})*B_i)|B_i=1] \\
-
 \mathbb{E}[Y_{i}|B_i = 1] =  \mathbb{E}[(Y_{0i} + (Y_{1i} - Y_{0i})*1)|B_i=1] \\
-
 \mathbb{E}[Y_{i}|B_i = 1] =  \mathbb{E}[Y_{1i}|B_i=1]
 \end{aligned}
 \end{equation}
+
+
+### Diferença em resultados potenciais
+
+Vamos supor que temos $10$ países e pudemos observar a renda per capita dos países (em milhares de dólares). Considere um "tratamento" binário que é o país ser democrático ou não (tal como definido pela tradição minimalista, de eleições competitivas). Se fosse possível observar os dois resultados potenciais para os dez países, teríamos uma tabela mais ou menos assim:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+
+# Definindo os valores para Y^1 e Y^0
+Y1 <- c(7, 5, 5, 7, 4, 10, 1, 5, 3, 9)
+Y0 <- c(1, 6, 1, 8, 2, 1, 10, 6, 7, 8)
+
+# Calculando Delta como a diferença entre Y^1 e Y^0
+Delta <- Y1 - Y0
+
+# Criando um dataframe com os dados
+dados <- data.frame(
+  ID = 1:10,                 # IDs de 1 a 10
+  `Y^1` = Y1,                
+  `Y^0` = Y0,                
+  Delta = Delta             
+)
+
+# Usando kable para criar a tabela
+kable(dados, caption = "Resultados Potenciais", align = 'c', 
+      col.names = c("ID", "$Y^1$", "$Y^0$", "$\\delta$"))
+```
+
+Podemos calcular o efeito médio do tratamento se tivermos essa tabela de dados, porque o efeito médio do tratamento é simplesmente a diferença média entre as colunas $Y^1$ e $Y^0$. Ou seja, a diferença entre $\mathbb{E}[Y^1] = 5.6$  $\mathbb{E}[Y^0] = 5$, o que dá um ATE de $0.6$. E nós interpretamos isso como o efeito causal médio de um país ser uma democracia comparado com uma ditadura é de aumentar a renda per capital em 0.6 mil dólares.
+
+Vejam que a democracia não é benéfica para todos os países. Em alguns casos, o efeito causal é negativo. Na linguagem de causalidade, dizemos que o efeito causal é heterogêneo entre as unidades.
+
+Vale notar que, uma vez que não há atribuição de tratamento e controle para os países, isto é, estamos falando apenas de resultados potenciais, não posso calcular o ATT nem o ATU. Para isso, é necessário que de algum modo a alocação para tratamento e controle seja feita e nós possamos observar os resultados em cada caso (isto é, das unidades no tratamento e no controle).
+
+Agora, vamos supor que as elites políticas dos países sabem qual instituição é melhor para seu próprio país e escolhem o regime político que gera a maior renda per capita. E vamos supor que agora nós só observamos o resultado correspondente ao regime político escolhido pelas elites do país, isto é, de acordo com a equação que conecta resultados potenciais e observados.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+
+# Definindo os valores para Y^1 e Y^0
+Y <- c(7, 6, 5, 8, 4, 10, 10, 6, 7, 9)
+D <- c(1, 0, 1, 0, 1, 1, 0, 0, 0, 1)
+# Calculando Delta como a diferença entre Y^1 e Y^0
+
+# Criando um dataframe com os dados
+dados <- data.frame(
+  ID = 1:10,                 # IDs de 1 a 10
+  Y = Y,                
+  D = D           
+)
+
+# Usando kable para criar a tabela
+kable(dados, caption = "Resultados Observados", align = 'c', 
+      col.names = c("ID", "$Y$", "$D$"))
+```
+
+A tabela x mostra apenas os resultados observados para o tratamento ou controle, e não mais os resultados potenciais. Considerando ainda a tabela com resultados potenciais, mas utilizando a atribuição de tratamento e controle feita pelas elites, podemos calcular o ATT e ATU. Lembrando que:
+
+$$
+ATT = \mathbb{E}[Y^1|D=1] - \mathbb{E}[Y^0|D=1]
+$$
+e
+
+$$
+ATU = \mathbb{E}[Y^1|D=0] - \mathbb{E}[Y^0|D=0]
+$$
+O ATT é, portanto, $(7+5+4+10+9)/5 - (1+1+2+1+8)/5 = 4.4$. E o ATU é $(5+7+1+5+3)/5 - (6+8+10+6+7)/5 = -3.2$.
+
+
+Veja que, usando a LIE, podemos redefinir o ATE como a média ponderada do ATT e ATU do seguinte modo:
+
+\begin{equation}
+\begin{aligned}
+ATT = \mathbb{E}[Y^1] - \mathbb{E}[Y^0] \\
+\text{Pela Lei das Esperanças Iteradas, sabemos que se X for uma variável binária, então:} & \\
+\mathbb{E}[Y] = \mathbb{E}[\mathbb{E}[Y|X]] = \mathbb{E}[Y|X=1]P(X=1) + \mathbb{E}[Y|X=0]P(X=0) \\
+\text{Aplicando essa lógica para o ATE, temos:} \\
+\mathbb{E}[Y^1] - \mathbb{E}[Y^0] = (\mathbb{E}[Y^1|X=1] - \mathbb{E}[Y^0|X=1])P(X=1) + (\mathbb{E}[Y^1|X=0] - \mathbb{E}[Y^0|X=0])P(X=0) = \\
+\mathbb{E}[Y^1] - \mathbb{E}[Y^0] = ATT P(X=1) + ATU P(X=0) = \\
+ATE = ATT P(X=1) + ATU P(X=0)
+\end{aligned}
+\end{equation}
+
+O que acontece se fôssemos utilizar essa tabela para calcular o efeito causal médio comparando $\mathbb{E}[Y^{\text{observado}}|D=1] - \mathbb{E}[Y^{\text{observado}}|D=0]$? Nossa estimativa do ATE seria portanto a diferença entre o ATT e o ATU, isto é.
+
+
+xxx
+
+
+
 ## Referências
 
 Bositis, D. A., & Steinel, D. (1987). A synoptic history and typology of experimental research in political science. Political Behavior, 9, 263-284.
