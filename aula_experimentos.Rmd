@@ -163,7 +163,7 @@ hist(replicate(1000, sum(rbinom(n, 1, 0.5))),
 
 ## Precisão da aleatorização em bloco - R sim p. 1
 ```{r echo=TRUE, eval=TRUE}
-# Set up Potential outcomes and units
+# Set up Potential outcomes and units and blocks
 set.seed(10)
 n1 <- 10
 n2 <- 16
@@ -182,11 +182,11 @@ simple_treatment <- as.numeric(1:N %in% units_simple_treatment)
 simple_control <- as.numeric(!1:N %in% units_simple_treatment)
 y1_obs <- y1*simple_treatment
 y1_obs <- y1_obs[y1_obs!= 0]
-y0_obs <- y1*simple_treatment
+y0_obs <- y0*simple_control
 y0_obs <- y0_obs[y0_obs != 0]
 
 # erro padrão
-t.test(y1_obs, y0_obs)$stderr
+t.test(y1_obs, y0_obs)$stderr # p-value = 0.1166
 ```
 
 ## Precisão da aleatorização em bloco - R sim p. 3
@@ -200,22 +200,20 @@ treatment <- as.numeric(1:N %in% units_treatment)
 units_control <- which(!is.na(match(1:N, c(t_bloco1, t_bloco2, t_bloco3))))
 control <- as.numeric(1:N %in% units_control)
 
-y1_obs <- y1*treatment
-y1_obs_bloco1 <- y1_obs[1:n1]
+y1_obs_bloco1 <- y1[1:n1]*treatment[1:n1]
 y1_obs_bloco1 <- y1_obs_bloco1[y1_obs_bloco1!= 0]
-y1_obs_bloco2 <- y1_obs[1:n2]
+y1_obs_bloco2 <- y1[(n1+1):(n1+n2)]*treatment[(n1+1):(n1+n2)]
 y1_obs_bloco2 <- y1_obs_bloco2[y1_obs_bloco2!= 0]
-y1_obs_bloco3 <- y1_obs[1:n3]
+y1_obs_bloco3 <- y1_obs[(n1+n2+1):(n1+n2+n3)]
 y1_obs_bloco3 <- y1_obs_bloco3[y1_obs_bloco3!= 0]
 ```
 ## Precisão da aleatorização em bloco - R sim p. 4
 ```{r echo=TRUE, eval=TRUE}
-y0_obs <- y1*control
-y0_obs_bloco1 <- y0_obs[1:n1]
+y0_obs_bloco1 <- y0[1:n1]*control[1:n1]
 y0_obs_bloco1 <- y0_obs_bloco1[y0_obs_bloco1!= 0]
-y0_obs_bloco2 <- y0_obs[1:n2]
+y0_obs_bloco2 <- y0[(n1+1):(n1+n2)]*control[(n1+1):(n1+n2)]
 y0_obs_bloco2 <- y0_obs_bloco2[y0_obs_bloco2!= 0]
-y0_obs_bloco3 <- y0_obs[1:n3]
+y0_obs_bloco3 <- y0[(n1+n2+1):(n1+n2+n3)]*control[(n1+n2+1):(n1+n2+n3)]
 y0_obs_bloco3 <- y0_obs_bloco3[y0_obs_bloco3!= 0]
 
 erro_pad1 <- t.test(y1_obs_bloco1, y0_obs_bloco1)$stderr
@@ -223,6 +221,7 @@ erro_pad2 <- t.test(y1_obs_bloco2, y0_obs_bloco2)$stderr
 erro_pad3 <- t.test(y1_obs_bloco3, y0_obs_bloco3)$stderr
 
 (erro_padrao_geral <- sqrt(erro_pad1^2*(n1/N)^2 + erro_pad2^2*(n2/N)^2 + erro_pad3^2*(n3/N)^2))
+p_value <- mean(y1_obs_bloco1 - y0_obs_bloco1)*(n1/N) + mean(y1_obs_bloco2 - y0_obs_bloco2)*(n2/N) + mean(y1_obs_bloco3 - y0_obs_bloco3)*(n3/N)
 ```
 
 ## Cluster Random Assigment
