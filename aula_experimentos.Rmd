@@ -1,0 +1,287 @@
+---
+title: "Experimentos e Inferência Causal"
+author: "Manoel Galdino"
+date: "`r Sys.Date()`"
+output: 
+  beamer_presentation:
+    theme: "Madrid"
+    colortheme: "dolphin"
+header-includes:
+  - \usepackage{graphicx}
+  - \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+---
+
+## Experimentos
+
+- Um experimento é o desenho de pesquisa no qual a pesquisadora controla o mecanismo de atribuição do tratamento e controle
+- Seja $p_i = P(T_i=1)$. Então $p_i$ é conhecido e controlado pela pesquisadora.
+- Em contraposição, estudo observacional é quando a pesquisadora não controla o mecanismo (natureza ou realidade social)
+- Quando uma quantidade potencial (estimando) pode ser descrita em função da distribuição de dados observáveis, dizemos que o estimando é identificável. De outro modo, não identificado.
+- Veremos porque experimentos produzem desenhos críveis de identificação causal
+
+## Diferença de média Observada e Viés de seleção
+
+- Supondo SUTVA, Diferença Simples de Média pode ser decomposta em ATE + viés de seleção
+- $\underbrace{\mathbb{E}[Y_i|T_i=1] - \mathbb{E}[Y_i|T_i=0]}_{\text{Simple Difference in Outcomes (SDO)}} = \mathbb{E}[Y_i^1|T_i=1] - \mathbb{E}[Y_i^0|T_i=0]$
+- Podemos adicionar e subtrair os resultados contrafactuais para os tratados
+- $= \mathbb{E}[Y_i^1|T_i=1] - \color{blue}{\mathbb{E}[Y_i^0|T_i=1]} + \color{red}{\mathbb{E}[Y_i^0|T_i=1]} - \mathbb{E}[Y_i^0|T_i=0]$
+- $= \underbrace{\mathbb{E}[Y_i^1 - Y_i^0|T_i=1]}_{\text{ATT}} + \underbrace{\mathbb{E}[Y_i^0|T_i=1] - \mathbb{E}[Y_i^0|T_i=0]}_{\text{Viés de Seleção}}$
+
+## Experimentos aleatórios
+
+- Mecanismo de atribuição de tratamento é probabilístico (Positividade): $0 < p_i < 1$.
+- Unconfoundedness ou Permutabilidade (ou *assignment mechanism–ignorability*): $P(T_i=1|y^1, y^0) = P(T_i)$.
+
+## O que é Permutabilidade (uncounfoudedness)?
+
+- A distribuição dos resultados potenciais é independente do tratamento.
+- $\mathbb{E}[Y^1|T=1] = \mathbb{E}[Y^1|T=0]$
+- $\mathbb{E}[Y^0|T=1] = \mathbb{E}[Y^0|T=0]$
+- Resultados potenciais são independentes do tratamento, dadas as covariáveis.
+- Se a condição de tratamento fosse hipoteticamente trocada, os resultados esperados permaneceriam os mesmos.
+- Isso significa que em um experimento com permutabilidade, não temos viés de seleção (Por quê?).
+
+## Distinção Entre Resultados Potenciais e Realizados
+
+- **Permutabilidade de Resultados Potenciais**:
+    - Estamos discutindo $Y^1 \indep T$, não $Y \indep T$.
+    - Importante distinguir entre resultados potenciais (hipotéticos) e resultados observados (realizados).
+
+## Experimento remove o viés de seleção
+- Independência entre tratamento e resultados potenciais implica que $\mathbb{E}[Y^0_i|T_i=1] = \mathbb{E}[Y^0_i|T_i=0] = \mathbb{E}[Y^0_i]$
+- Portanto, o viés de seleção, dado por $\mathbb{E}[Y_i^0|T_i=1] - \mathbb{E}[Y_i^0|T_i=0]$, fica:
+- $\mathbb{E}[Y_i^0|T_i=1] - \mathbb{E}[Y_i^0|T_i=0] = \mathbb{E}[Y_i^0] - \mathbb{E}[Y_i^0] = 0$
+- Ou seja, SDO estima o ATE (via ATT).
+- $\underbrace{\mathbb{E}[Y_i|T_i=1] - \mathbb{E}[Y_i|T_i=0]}_{\text{Simple Difference in Outcomes (SDO)}} =  \underbrace{\mathbb{E}[Y_i^1 - Y_i^0|T_i=1]}_{\text{ATT}} = ATE$
+
+## Restrição de Exclusão
+
+- Formalmente, podemos separar a alocação do tratamento e o tratamento efetivamente recebido. Seja $Z_i$ a alocação do tratamento e $T_i$ o tratamento recebido.
+- Então, a restrição de exclusão quer dizer que o que importa é o tratamento efetivamente recebido $T_i$, e não a variável que aloca o tratamento $Z_i$.
+- Formalmente, isso quer dizer que: $Y^{1,z=1, T}_i = Y^{1,z=0, T}_i = Y^{1,T}_i$ e similarmente, $Y^{0,z=0,T}_i = Y^{0,z=0,T}_i = Y^{0,T}_i$
+- Quando não ocorre isso? Se o mecanismo de atribuição do tratamento dispara outras causas
+- Suponha que um experimento é sobre efeito de transferência de dinheiro em bem-estar
+- Se ongs, sabendo do experimento, forem ajudar quem não tiver sido alocado para receber dinheiro
+
+## Restrição de Exclusão - erro de mensuração
+
+- Se tiver erro de mensuração assimétrico
+- Pesquisadores distintos entrevistam recipientes e não-recipientes da transferência de dinheiro, com habilidades distintas
+- Ou questionários diferentes. Erro de mensuração assimétrico
+
+## Erro de mensuração
+- Nova *switching equation*.
+- Seja $e_{i1}$ o erro de mensuração cometido se uma observação é atribuída para o tratamento, e, analogamente, $e_{i0}$ o erro para o controle.
+- De $Y_i = T_iY^1_i + (1- T_i)Y^0_i$ para $Y_i = T_i(Y^1_i + e_{i1}) + (1- T_i))(Y^0_i + e_{i0})$. 
+- Novo SDO: $\mathbb{E}[Y_i|T_i=1] - \mathbb{E}[Y_i|T_i=0] = \mathbb{E}[Y^1_i + e_{i1}|T_i=1] - \mathbb{E}[Y^0_i + e_{i0}|T_i=0] = \mathbb{E}[Y^1_i|T-i=1] + \mathbb{E}[e_{i1}|T_i=1] - \mathbb{E}[Y^0_i|T_i=0] - \mathbb{E}[e_{i0}|T_i=0]$
+- Novo SDO pode se rearranjado: $\underbrace{\mathbb{E}[Y^1_i|T-i=1] - \mathbb{E}[Y^0_i|T_i=0]}_{\text{antigo SDO}} + \underbrace{\mathbb{E}[e_{i1}|T_i=1]  - \mathbb{E}[e_{i0}|T_i=0]}_{\text{Dif média no erro de mensuração}}$
+- Se $\mathbb{E}[e_{i1}|T_i=1] \neq \mathbb{E}[e_{i0}|T_i=0]$, então SDO será viesado.
+
+## Garantindo a Restrição de Exclusão
+
+- Double blindness (duplo cego)
+- paralelismo na administração do experimento (mesmo questionário e mesmos entrevistadores)
+- Na pior das hipóteses, aleatorização dos entrevistadores.
+
+# Tipos de experimentos
+
+## Aleatorização de Bernoulli 
+
+- É o experimento com aleatorização simples (basicamente, lançamento de moeda)
+- Matematicamente, $p_i(T_i=1) = p$.
+- Problema: Possível "má aleratorização" (todo mundo no controle ou tratamento)
+- ps.: toda aleatorização realizada é matematicamente equivalente.
+- Possui $2^n$ configurações possíveis de alocação entre tratamento e controle
+
+## Aleatorização de Bernoulli - Sim no R - código
+
+```{r echo=TRUE, eval=FALSE}
+set.seed(10)
+n <- 50
+hist(replicate(1000, sum(rbinom(n, 1, 0.5))), 
+     main = "aleatorização de Bernoulli",
+     xlab = "Número de tratados",
+     col = "lightblue")
+```
+
+## Aleatorização de Bernoulli - Sim no R - Histograma
+
+```{r echo=FALSE, eval=TRUE}
+set.seed(10)
+n <- 50
+hist(replicate(1000, sum(rbinom(n, 1, 0.5))), 
+     main = "aleatorização de Bernoulli",
+     xlab = "Número de tratados",
+     col = "lightblue")
+```
+
+## Aleatorização Completa
+
+- Seleciono aleatoriamente um número fixo de pessoas para tratamento e controle
+- Ex.: 25 para tratamento e 25 para controle
+- Basta numerar cada unidade (de 1 a 50) e amostrar 25 aleatoriamente para tratamento (e restante para controle)
+- Vantagem: garanto número de obs em cada condição
+- Possui ${N \choose \frac{n}{2}}$ configurações possíveis de alocação entre tratamento e controle.
+- Intuição: estamos jogando fora as aleatorizações "indesejáveis".
+- Cálculo da variância é mais complexo
+
+## Aleatorização Condicional (Block Random Assigment)
+
+- **Definição**: Experimento é condicionalmente aleatório se a aleatorização depende de variáveis pré-tratamento $X$.
+- **Exemplo Binário**: Duas moedas, uma para $X=1$ e outra para $X=0$.
+- **Aleatorização Marginal vs. Condicional**:
+    - Marginal: Aleatorização uniforme para todos os indivíduos.
+    - Condicional: Aleatorização depende de $X$, gerando permutabilidade condicional a $X$.
+- **Permutabilidade Condicional**: $(Y^1, Y^0 | X=x) \indep T$.
+
+## Implicações da Aleatorização Condicional
+
+- Não gera permutabilidade (não-condicional).
+- Permutabilidade condicional a $X$ é crucial para inferência em contextos com variáveis pré-tratamento.
+
+## Pensando aleatorização em bloco
+
+- Ex.: digamos que em um amostra de 100 pessoas, queira 25 homens e 25 mulheres no tratamento e controle
+- Sorteio 25 homens para tramento e depois 25 mulheres.
+- Blocos de tamanho $2$ são chamados de *pair-matched design*.
+
+## ATE com Aleatorização Condicional
+
+- Estratitificação
+- Efeito heterogêneo por estrato?
+- Podemos calcular o ATE por estrato, já que é aleatório no interior de cada estrato.
+- Efeito geral na população.
+- Podemos calcular ponderando os ATEs.
+- Seja $J$ o número de estratos, indixados por $j$. Seja $N$ o número de unidades e $N_j$ o número de unidades no bloco $j$. Então:
+- $ATE = \sum_{j=1}^J \frac{N_j}{N}ATE_j$
+
+## Precisão da aleatorização em bloco
+- Em geral a precisão aumenta (erro padrão diminui) com aleatorização em bloco.
+- Intuição é que removemos parte da variância (amostras possíveis), condicionando nos estratos
+- Vamos checar uma simulação no R para ver um exemplo do ganho na precisão
+- Lembrem-se que se $X$ e $Y$ são independentes, então $Var(aX + bY) = a^2Var(x) + b^2Var(Y)$.
+
+## Precisão da aleatorização em bloco - R sim p. 1
+```{r echo=TRUE, eval=TRUE}
+# Set up Potential outcomes and units
+set.seed(10)
+n1 <- 10
+n2 <- 16
+n3 <- 20
+N <- n1+n2+n3
+J <- 3
+y0 <- rnorm(N)
+y1 <- y0 + .5
+```
+
+## Precisão da aleatorização em bloco - R sim p. 2
+```{r echo=TRUE, eval=TRUE}
+# random assignment
+units_simple_treatment <- sample(N, N/2)
+simple_treatment <- as.numeric(1:N %in% units_simple_treatment)
+simple_control <- as.numeric(!1:N %in% units_simple_treatment)
+y1_obs <- y1*simple_treatment
+y1_obs <- y1_obs[y1_obs!= 0]
+y0_obs <- y1*simple_treatment
+y0_obs <- y0_obs[y0_obs != 0]
+
+# erro padrão
+t.test(y1_obs, y0_obs)$stderr
+```
+
+## Precisão da aleatorização em bloco - R sim p. 3
+```{r echo=TRUE, eval=TRUE}
+# block assignment
+t_bloco1 <- sample(1:n1, n1/2)
+t_bloco2 <- sample((n1+1):(n1+n2), n2/2)
+t_bloco3 <- sample((n1+n2+1):(n1+n2+n3), n3/2)
+units_treatment <- which(is.na(match(1:N, c(t_bloco1, t_bloco2, t_bloco3))))
+treatment <- as.numeric(1:N %in% units_treatment)
+units_control <- which(!is.na(match(1:N, c(t_bloco1, t_bloco2, t_bloco3))))
+control <- as.numeric(1:N %in% units_control)
+
+y1_obs <- y1*treatment
+y1_obs_bloco1 <- y1_obs[1:n1]
+y1_obs_bloco1 <- y1_obs_bloco1[y1_obs_bloco1!= 0]
+y1_obs_bloco2 <- y1_obs[1:n2]
+y1_obs_bloco2 <- y1_obs_bloco2[y1_obs_bloco2!= 0]
+y1_obs_bloco3 <- y1_obs[1:n3]
+y1_obs_bloco3 <- y1_obs_bloco3[y1_obs_bloco3!= 0]
+```
+## Precisão da aleatorização em bloco - R sim p. 4
+```{r echo=TRUE, eval=TRUE}
+y0_obs <- y1*control
+y0_obs_bloco1 <- y0_obs[1:n1]
+y0_obs_bloco1 <- y0_obs_bloco1[y0_obs_bloco1!= 0]
+y0_obs_bloco2 <- y0_obs[1:n2]
+y0_obs_bloco2 <- y0_obs_bloco2[y0_obs_bloco2!= 0]
+y0_obs_bloco3 <- y0_obs[1:n3]
+y0_obs_bloco3 <- y0_obs_bloco3[y0_obs_bloco3!= 0]
+
+erro_pad1 <- t.test(y1_obs_bloco1, y0_obs_bloco1)$stderr
+erro_pad2 <- t.test(y1_obs_bloco2, y0_obs_bloco2)$stderr
+erro_pad3 <- t.test(y1_obs_bloco3, y0_obs_bloco3)$stderr
+
+(erro_padrao_geral <- sqrt(erro_pad1^2*(n1/N)^2 + erro_pad2^2*(n2/N)^2 + erro_pad3^2*(n3/N)^2))
+```
+
+## Cluster Random Assigment
+
+- Quando aleatorizo o cluster, em vez das unidades.
+- Ex.: Se não for possível aleatorizar um tratamento entre estudantes, aleatorizo escolas
+- No interior de cada escola, todo mundo é tratado ou não-tratado. Não há variação *within* escolas, apenas entre (between) escolas.
+- Grande perda de variabilidade nos dados, reduzindo precisão (aumento no erro padrão)
+- Às vezes é a única aleatorização possível.
+
+
+## Estimador
+
+```{r resultado-tabela, echo=FALSE, fig.cap="Tabela de resultados.", out.width = '50%'}
+knitr::include_graphics("experiments_report.png")
+```
+
+## Estimador ATE
+
+
+- estimativa: $\frac{\sum_{i=1}^{n}Y_iT_i}{n_1} - \frac{\sum_{i=1}^{n}Y_i(1-T_i)}{n_0} = .0608 - .0353 = 0.0255$
+- Erro padrão: $\sqrt{\frac{\hat{\sigma_1^2}}{n_1} + \frac{\hat{\sigma_0^2}}{n_0}} = \sqrt{\frac{.0608\cdot(1-.0608)}{1217} + \frac{.0353\cdot (1-.0353)}{1217}} = 0.00865$
+- A diferença é por erro de aproximação com os coeficientes da tabela
+- O que podemos checar no R, fazendo os cálculos exatos
+
+## Estimador ATE - R
+
+```{r echo=TRUE, eval=FALSE}
+treatment <- c(rep(1, 74), rep(0, 1217 - 74))
+control <- c(rep(1, 43), rep(0, 1217 - 43))
+var_treat <- var(treatment) 
+var_control <- var(control)
+erro_padrao <- sqrt(var_treat/1217 + var_control/1217)
+round(erro_padrao, 5)
+
+t.test(treatment, control)      
+
+t.test(treatment, control)$stderr
+
+```
+
+## Estimador ATE - R print
+
+```{r echo=FALSE, eval=TRUE}
+treatment <- c(rep(1, 74), rep(0, 1217 - 74))
+control <- c(rep(1, 43), rep(0, 1217 - 43))
+var_treat <- var(treatment) 
+var_control <- var(control)
+erro_padrao <- sqrt(var_treat/1217 + var_control/1217)
+round(erro_padrao, 5)
+
+t.test(treatment, control)      
+
+t.test(treatment, control)$stderr
+
+```
+
+## Conclusão
+
+- A aleatorização condicional complementa nossa compreensão de permutabilidade e inferência causal.
+- Distinguir entre aleatorização marginal e condicional é essencial para desenhar experimentos e analisar dados de forma válida.
+
