@@ -11,15 +11,17 @@ header-includes:
   - \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
 ---
 
-## Experimentos
+# Experimentos
 
+## Introdução
 - Um experimento é o desenho de pesquisa no qual a pesquisadora controla o mecanismo de atribuição do tratamento e controle
 - Seja $p_i = P(T_i=1)$. Então $p_i$ é conhecido e controlado pela pesquisadora.
-- Em contraposição, estudo observacional é quando a pesquisadora não controla o mecanismo (natureza ou realidade social)
+- Em contraposição, um estudo observacional é quando a pesquisadora não controla o mecanismo (natureza ou realidade social)
 - Quando uma quantidade potencial (estimando) pode ser descrita em função da distribuição de dados observáveis, dizemos que o estimando é identificável. De outro modo, não identificado.
 - Veremos porque experimentos produzem desenhos críveis de identificação causal
+- Vamos supor experimentos ideais (sem attrition ou non-compliance)
 
-## Diferença de média Observada e Viés de seleção
+## Diferença de média observada e Viés de seleção
 
 - Supondo SUTVA, Diferença Simples de Média pode ser decomposta em ATE + viés de seleção
 - $\underbrace{\mathbb{E}[Y_i|T_i=1] - \mathbb{E}[Y_i|T_i=0]}_{\text{Simple Difference in Outcomes (SDO)}} = \mathbb{E}[Y_i^1|T_i=1] - \mathbb{E}[Y_i^0|T_i=0]$
@@ -73,14 +75,14 @@ header-includes:
 - Nova *switching equation*.
 - Seja $e_{i1}$ o erro de mensuração cometido se uma observação é atribuída para o tratamento, e, analogamente, $e_{i0}$ o erro para o controle.
 - De $Y_i = T_iY^1_i + (1- T_i)Y^0_i$ para $Y_i = T_i(Y^1_i + e_{i1}) + (1- T_i))(Y^0_i + e_{i0})$. 
-- Novo SDO: $\mathbb{E}[Y_i|T_i=1] - \mathbb{E}[Y_i|T_i=0] = \mathbb{E}[Y^1_i + e_{i1}|T_i=1] - \mathbb{E}[Y^0_i + e_{i0}|T_i=0] = \mathbb{E}[Y^1_i|T-i=1] + \mathbb{E}[e_{i1}|T_i=1] - \mathbb{E}[Y^0_i|T_i=0] - \mathbb{E}[e_{i0}|T_i=0]$
-- Novo SDO pode se rearranjado: $\underbrace{\mathbb{E}[Y^1_i|T-i=1] - \mathbb{E}[Y^0_i|T_i=0]}_{\text{antigo SDO}} + \underbrace{\mathbb{E}[e_{i1}|T_i=1]  - \mathbb{E}[e_{i0}|T_i=0]}_{\text{Dif média no erro de mensuração}}$
+- Novo SDO: $\mathbb{E}[Y_i|T_i=1] - \mathbb{E}[Y_i|T_i=0] = \mathbb{E}[Y^1_i + e_{i1}|T_i=1] - \mathbb{E}[Y^0_i + e_{i0}|T_i=0] = \mathbb{E}[Y^1_i|T_i=1] + \mathbb{E}[e_{i1}|T_i=1] - \mathbb{E}[Y^0_i|T_i=0] - \mathbb{E}[e_{i0}|T_i=0]$
+- Novo SDO pode se rearranjado: $\underbrace{\mathbb{E}[Y^1_i|T_i=1] - \mathbb{E}[Y^0_i|T_i=0]}_{\text{antigo SDO}} + \underbrace{\mathbb{E}[e_{i1}|T_i=1]  - \mathbb{E}[e_{i0}|T_i=0]}_{\text{Dif média no erro de mensuração}}$
 - Se $\mathbb{E}[e_{i1}|T_i=1] \neq \mathbb{E}[e_{i0}|T_i=0]$, então SDO será viesado.
 
 ## Garantindo a Restrição de Exclusão
 
 - Double blindness (duplo cego)
-- paralelismo na administração do experimento (mesmo questionário e mesmos entrevistadores)
+- Paralelismo na administração do experimento (mesmo questionário e mesmos entrevistadores)
 - Na pior das hipóteses, aleatorização dos entrevistadores.
 
 # Tipos de experimentos
@@ -101,7 +103,7 @@ n <- 50
 hist(replicate(1000, sum(rbinom(n, 1, 0.5))), 
      main = "aleatorização de Bernoulli",
      xlab = "Número de tratados",
-     col = "lightblue")
+     col = "lightblue") + xlim(0,50)
 ```
 
 ## Aleatorização de Bernoulli - Sim no R - Histograma
@@ -112,7 +114,8 @@ n <- 50
 hist(replicate(1000, sum(rbinom(n, 1, 0.5))), 
      main = "aleatorização de Bernoulli",
      xlab = "Número de tratados",
-     col = "lightblue")
+     col = "lightblue",
+     xlim = c(10,40))
 ```
 
 ## Aleatorização Completa
@@ -141,11 +144,14 @@ hist(replicate(1000, sum(rbinom(n, 1, 0.5))),
 
 ## Pensando aleatorização em bloco
 
-- Ex.: digamos que em um amostra de 100 pessoas, queira 25 homens e 25 mulheres no tratamento e controle
+- Ex.: digamos que em um amostra de 100 pessoas, queremos 25 homens e 25 mulheres no tratamento e controle
 - Sorteio 25 homens para tramento e depois 25 mulheres.
+- Cada bloco possui tamanho 25, neste exemplo.
 - Blocos de tamanho $2$ são chamados de *pair-matched design*.
+- Em geral, estudos com *matching* em muitas variáveis
+- Útil para amostras pequenas
 
-## ATE com Aleatorização Condicional
+## ATE com Aleatorização Condicional (Bloco)
 
 - Estratitificação
 - Efeito heterogêneo por estrato?
@@ -154,6 +160,13 @@ hist(replicate(1000, sum(rbinom(n, 1, 0.5))),
 - Podemos calcular ponderando os ATEs.
 - Seja $J$ o número de estratos, indixados por $j$. Seja $N$ o número de unidades e $N_j$ o número de unidades no bloco $j$. Então:
 - $ATE = \sum_{j=1}^J \frac{N_j}{N}ATE_j$
+
+## Aleatorização em bloco
+-- Pela Lei dos Grandes números, tende a gerar balanceamento entre blocos
+-- Balanceamento quer dizer que blocos são similares
+-- Em variáveis observadas e não-observadas
+-- Probabilidade de tratamento pode variar por bloco. 
+-- Chamada de propensity score.
 
 ## Precisão da aleatorização em bloco
 - Em geral a precisão aumenta (erro padrão diminui) com aleatorização em bloco.
@@ -164,67 +177,75 @@ hist(replicate(1000, sum(rbinom(n, 1, 0.5))),
 ## Precisão da aleatorização em bloco - R sim p. 1
 ```{r echo=TRUE, eval=TRUE}
 # Set up Potential outcomes and units and blocks
-set.seed(10)
 n1 <- 10
 n2 <- 16
-n3 <- 20
-N <- n1+n2+n3
-J <- 3
-y0 <- rnorm(N)
-y1 <- y0 + .5
-```
-
-## Precisão da aleatorização em bloco - R sim p. 2
-```{r echo=TRUE, eval=TRUE}
-# random assignment
-units_simple_treatment <- sample(N, N/2)
-simple_treatment <- as.numeric(1:N %in% units_simple_treatment)
-simple_control <- as.numeric(!1:N %in% units_simple_treatment)
-y1_obs <- y1*simple_treatment
-y1_obs <- y1_obs[y1_obs!= 0]
-y0_obs <- y0*simple_control
-y0_obs <- y0_obs[y0_obs != 0]
-
-# erro padrão
-t.test(y1_obs, y0_obs)$stderr # p-value = 0.1166
+N <- n1+n2
+J <- 2
+index_block <- c(rep(2, n2), rep(1, n1))
+set.seed(12)
+# potential outcome control
+y0 <- c(rnorm(n1, 2, 1),rnorm(n2, 6, 1)) 
+y1 <- y0 + 1.5 # potential outcome treatment
 ```
 
 ## Precisão da aleatorização em bloco - R sim p. 3
 ```{r echo=TRUE, eval=TRUE}
 # block assignment
 t_bloco1 <- sample(1:n1, n1/2)
-t_bloco2 <- sample((n1+1):(n1+n2), n2/2)
-t_bloco3 <- sample((n1+n2+1):(n1+n2+n3), n3/2)
-units_treatment <- which(is.na(match(1:N, c(t_bloco1, t_bloco2, t_bloco3))))
-treatment <- as.numeric(1:N %in% units_treatment)
-units_control <- which(!is.na(match(1:N, c(t_bloco1, t_bloco2, t_bloco3))))
-control <- as.numeric(1:N %in% units_control)
+c_bloco1 <- (1:n1)[!(1:n1 %in% t_bloco1)]
 
-y1_obs_bloco1 <- y1[1:n1]*treatment[1:n1]
-y1_obs_bloco1 <- y1_obs_bloco1[y1_obs_bloco1!= 0]
-y1_obs_bloco2 <- y1[(n1+1):(n1+n2)]*treatment[(n1+1):(n1+n2)]
-y1_obs_bloco2 <- y1_obs_bloco2[y1_obs_bloco2!= 0]
-y1_obs_bloco3 <- y1_obs[(n1+n2+1):(n1+n2+n3)]
-y1_obs_bloco3 <- y1_obs_bloco3[y1_obs_bloco3!= 0]
+t_bloco2 <- sample((n1+1):(n1+n2), n2/2)
+c_bloco2 <- ((n1+1):(n1+n2))[!((n1+1):(n1+n2) %in% t_bloco2)]
+
+y1_obs_bloco1 <- y1[t_bloco1]
+y1_obs_bloco2 <- y1[t_bloco2]
+y0_obs_bloco1 <- y0[c_bloco1]
+y0_obs_bloco2 <- y0[c_bloco2]
 ```
+
+
+## Precisão da aleatorização em bloco - R sim p. 2
+```{r echo=TRUE, eval=TRUE}
+# random assignment
+units_simple_treatment <- c(t_bloco1, t_bloco2)
+units_simple_control <- c(c_bloco1, c_bloco2)
+y1_obs <- y1[units_simple_treatment]
+y0_obs <- y0[units_simple_control]
+
+# erro padrão
+erro_pad_simple <- t.test(y1_obs, y0_obs)$stderr 
+simple_p_value <- t.test(y1_obs, y0_obs)$p.value
+
+my_t <- mean(y1_obs - y0_obs)/erro_pad_simple
+```
+
+
 ## Precisão da aleatorização em bloco - R sim p. 4
 ```{r echo=TRUE, eval=TRUE}
-y0_obs_bloco1 <- y0[1:n1]*control[1:n1]
-y0_obs_bloco1 <- y0_obs_bloco1[y0_obs_bloco1!= 0]
-y0_obs_bloco2 <- y0[(n1+1):(n1+n2)]*control[(n1+1):(n1+n2)]
-y0_obs_bloco2 <- y0_obs_bloco2[y0_obs_bloco2!= 0]
-y0_obs_bloco3 <- y0[(n1+n2+1):(n1+n2+n3)]*control[(n1+n2+1):(n1+n2+n3)]
-y0_obs_bloco3 <- y0_obs_bloco3[y0_obs_bloco3!= 0]
-
 erro_pad1 <- t.test(y1_obs_bloco1, y0_obs_bloco1)$stderr
 erro_pad2 <- t.test(y1_obs_bloco2, y0_obs_bloco2)$stderr
-erro_pad3 <- t.test(y1_obs_bloco3, y0_obs_bloco3)$stderr
 
-(erro_padrao_geral <- sqrt(erro_pad1^2*(n1/N)^2 + erro_pad2^2*(n2/N)^2 + erro_pad3^2*(n3/N)^2))
-p_value <- mean(y1_obs_bloco1 - y0_obs_bloco1)*(n1/N) + mean(y1_obs_bloco2 - y0_obs_bloco2)*(n2/N) + mean(y1_obs_bloco3 - y0_obs_bloco3)*(n3/N)
+erro_padrao_geral <- sqrt(erro_pad1^2*(n1/N)^2 + erro_pad2^2*(n2/N)^2)
+ate1 <- mean(y1_obs_bloco1 - y0_obs_bloco1)*(n1/N)
+ate2 <- mean(y1_obs_bloco2 - y0_obs_bloco2)*(n2/N)
+ate <- ate1 + ate2
+my_t <- ate/erro_padrao_geral
+p_value <- 2*(1 - pt(abs(my_t), df = 23.76567))
 ```
 
-## Cluster Random Assigment
+## Comparação de SEs
+```{r echo=FALSE, eval=TRUE}
+library(knitr)
+
+comparison_table <- data.frame(
+  Method = c("Simple Randomization", "Block 1", "Block 2", "General Block Randomization"),
+  Standard_Error = c(erro_pad_simple, erro_pad1, erro_pad2, erro_padrao_geral)
+)
+
+knitr::kable(comparison_table, caption = "Comparação de Erros padrão", align = 'c', format = "latex")
+```
+
+## Cluster randomization
 
 - Quando aleatorizo o cluster, em vez das unidades.
 - Ex.: Se não for possível aleatorizar um tratamento entre estudantes, aleatorizo escolas
@@ -233,7 +254,22 @@ p_value <- mean(y1_obs_bloco1 - y0_obs_bloco1)*(n1/N) + mean(y1_obs_bloco2 - y0_
 - Às vezes é a única aleatorização possível.
 
 
-## Estimador
+## Comparação
+
+```{r echo=FALSE, eval=TRUE}
+library(knitr)
+
+comparison_table1 <- data.frame(
+  Method = c("Simple Randomization", "Block Randomization"),
+  p_value = c(simple_p_value, p_value)
+)
+
+knitr::kable(comparison_table1, caption = "Comparação de valoes p", align = 'c', format = "latex")
+
+```
+
+
+## Tabelas em artigos
 
 ```{r resultado-tabela, echo=FALSE, fig.cap="Tabela de resultados.", out.width = '50%'}
 knitr::include_graphics("experiments_report.png")
@@ -244,8 +280,8 @@ knitr::include_graphics("experiments_report.png")
 
 - estimativa: $\frac{\sum_{i=1}^{n}Y_iT_i}{n_1} - \frac{\sum_{i=1}^{n}Y_i(1-T_i)}{n_0} = .0608 - .0353 = 0.0255$
 - Erro padrão: $\sqrt{\frac{\hat{\sigma_1^2}}{n_1} + \frac{\hat{\sigma_0^2}}{n_0}} = \sqrt{\frac{.0608\cdot(1-.0608)}{1217} + \frac{.0353\cdot (1-.0353)}{1217}} = 0.00865$
-- A diferença é por erro de aproximação com os coeficientes da tabela
-- O que podemos checar no R, fazendo os cálculos exatos
+- Pequena diferença com os coeficientes da tabela
+- Typo? Alguma informação não reproduz exatamente? Fizemos algo errado?
 
 ## Estimador ATE - R
 
@@ -258,9 +294,6 @@ erro_padrao <- sqrt(var_treat/1217 + var_control/1217)
 round(erro_padrao, 5)
 
 t.test(treatment, control)      
-
-t.test(treatment, control)$stderr
-
 ```
 
 ## Estimador ATE - R print
@@ -273,14 +306,15 @@ var_control <- var(control)
 erro_padrao <- sqrt(var_treat/1217 + var_control/1217)
 round(erro_padrao, 5)
 
-t.test(treatment, control)      
-
-t.test(treatment, control)$stderr
+t.test(treatment, control)
 
 ```
 
-## Conclusão
+## Key Takeways
 
-- A aleatorização condicional complementa nossa compreensão de permutabilidade e inferência causal.
-- Distinguir entre aleatorização marginal e condicional é essencial para desenhar experimentos e analisar dados de forma válida.
+- Experimento (sob SUTVA) elimina o viés de seleção
+- Depende de restrição de exclusão e simetria
+- Vários tipos de experimentos: block aumenta precisão
+- Com N grande, diferença diminui
+- Sempre supomos condições ideais (sem attrition, compliance perfeito etc.)
 
