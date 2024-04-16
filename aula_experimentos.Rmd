@@ -21,6 +21,15 @@ header-includes:
 - Veremos porque experimentos produzem desenhos críveis de identificação causal
 - Vamos supor experimentos ideais (sem attrition ou non-compliance)
 
+## SUTVA
+
+- Stable Unit Treatment Values Assumption
+- Não interferência e sem varição escondida no tratamento
+  - PO não varia com o tratamento atribuiído a outra unidades
+  - PO de uma unidade não é impactado pelo nível de tratamento de outras unidades
+- Para cada unidade, não há formas distintas ou versões de cada nível de tratamento
+- Definição não-ambígua do tratamento
+
 ## Diferença de média observada e Viés de seleção
 
 - Supondo SUTVA, Diferença Simples de Média pode ser decomposta em ATE + viés de seleção
