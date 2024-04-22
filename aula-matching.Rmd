@@ -3,6 +3,9 @@ title: "Matching"
 author: "Manoel Galdino"
 date: "2024-03-07"
 output: pdf_document
+header-includes:
+   - \usepackage{tikz}
+   - \usetikzlibrary{arrows.meta, positioning}
 ---
 
 ```{r setup, include=FALSE}
@@ -16,52 +19,130 @@ Na aula de hoje, iremos aprender sobre a principal estratégia de "seleção em 
 
 ## Subclassificação
 
-Subclassificação é um método para para cumprir os requisitos de ajustamento de "backdoor" de um DAG, por meio de estratificação e uso dos pesos de cada estrato. A ideia é que em vez de comparar a diferença na média entre o tratamento e controle em um estudo observacional, iremos comparar a diferença na média por estratos, responderando pelos pesos dos estratos. Este método consegue produzir equilíbrio (balancing) entre tratamento eo controle em termos do controle observável.
+Subclassificação é um método para para cumprir os requisitos de ajustamento de "backdoor" de um DAG, por meio de estratificação e uso dos pesos de cada estrato. A ideia é que em vez de comparar a diferença na média entre o tratamento e controle em um estudo observacional, iremos comparar a diferença na média por estratos, responderando pelos pesos dos estratos. Este método consegue produzir equilíbrio (balancing) entre tratamento e controle em termos do controle observável.
 
 O artigo clássico que é a referência no método é de Cochran (1968). O exemplo que ele usa para ilustrar o procedimento é a investigação sobre se cigarro causa câncer de pulmão. À época, ainda era um assunto bastante debatido se cigarro causava câncer. Fisher e Neyman, por exemplo, eram críticos das evidências de que cigarro causaria câncer.
-
-## Suposição de Independência Condicional
-
-A suposição de independência condicional (CIA, na sigla em inglês) diz que, condicional a um vetor de (uma ou mais) covariáveis $X$, resultados potenciais são independentes do mecanismo de aloção de tratamenhto e controle. Formalmente, escrevemos:
-
-$$
-(Y^1, Y^o) \perp\!\!\!\perp D|X
-$$
-
-O símbolo $\perp\!\!\!\perp$ é nossa notação para independência estatística. E implica que a esperança dos resultados potenciais de tratamento e controle são iguais no tratamento e controle para cada valor de $x$. Formalmente, escrevemos:
-
-\begin{align*}
-\mathbb{E}[Y^1|D=1,X] =  \mathbb{E}[Y^1|D=0,X] \\
-\mathbb{E}[Y^0|D=1,X] =  \mathbb{E}[Y^0|D=0,X]
-\end{align*}
-
-Portanto, se CIA for crível, podemos usar subclassificação. E, quando a alocação do tratamento é condicional a variáveis observáveis, é uma estratégia de identificação baseada em observáveis.
-
-## Cigarro e Câncer de Pulmão
-
-Vamos ver um exemplo para entender como funciona a subclassificação.
-
-```{r, echo=FALSE}
+```{r mortes-cigarro}
 library(knitr)
 # Data for Table 5.1 (with NA for missing values)
 data <- data.frame(
-  Group = c("Non-smokers", "Cigar/pipe smokers", "Cigarette smokers"),
-  Canada = c(20.2, 35.5, NA),
-  UK = c(NA, NA, NA),
-  US = c(NA, NA, NA)
+  Group = c("Non-smokers", "Cigarette smokers", "Cigar/pipe smokers"),
+  Canada = c(20.2, 20.5, 35.5),
+  UK = c(11.3, 14.1, 20.7),
+  US = c(13.5, 13.5, 17.4)
 )
 
 # R Markdown code for the table
 
-kable(data, caption = "Death rates per 1,000 person-years (placeholder values)")
+kable(data, caption = "Table 5.1: Death rates per 1,000 person-years Cochran 1968, apud Cunnigham 2022 ")
 ```
 
-A tabela 1 mostra que a taxa de mortalidade é maior para fumantes de cachimbos e charutos do que cigarros. Isso não quer dizer que o efeito causal de cachimbos e charutos é maior do que cigarros, até porque o mecanismo sugerido para câncer de pulmão era a inalação da fumaça, que depositava alcatrão nos pulmões. Para que isso seja resultado do efeito causal, precisamos acreditar que:
+```{r tabela1}
 
-\begin{align*}
-\mathbb{E}[Y^1|D=& \textnormal{"cigarro"}] =  \mathbb{E}[Y^1|D=& & \textnormal{"cigarro"}] \\
-\mathbb{E}[Y^0|D=\textnormal{"cigarro"}] =  \mathbb{E}[Y^0|D=\textnormal{"cigarro"}]
-\end{align*}
+data <- data.frame(
+  Group = c("Non-smokers",  "Cigarette smokers", "Cigar/pipe smokers"),
+  Canada = c(54.9, 50.5, 65.9),
+  UK = c(79.1, 49.8, 55.7),
+  US = c(57.0, 53.2, 59.7)
+)
 
+# R Markdown code for the table
+
+kable(data, caption = "Idade média por grupo - Cochran 1968, apud Cunnigham 2022")
+```
+
+Tudo se passa como se tivéssemos o seguinte DAG:
+
+```{=latex}
+\begin{tikzpicture}[>={Latex[width=2mm,length=2mm]},
+                    node distance=1.2cm and 1.2cm]
+  % Nós
+  \node (A) {$A$};
+  \node (S) [below left=of A] {$S$};
+  \node (D) [below right=of A] {$D$};
+
+  % Arestas
+  \draw[->] (S) -- (D);
+  \draw[->] (A) -- (D);
+  \draw[->] (A) -- (S);
+\end{tikzpicture}
+```
+
+Ou seja, precisamos controlar para idade (violação da CIA, ignorability, backdoor aberto etc.). Uma forma em que isso aparece é desbalanceamento das covariáveis. Ou seja, não temos mesma média de idade entre os grupos. Na verdade, balanceamento tem a ver com ter distribuição similar nas covariáveis entre diferentes níveis de tratamento.
+
+A ideia da subclassificação é então ajustar o desbalanceamento na idade, de modo que tenha a mesma distribuição de idade (no caso, média) entre os três grupos. Digamos que tivéssemos três faixas etárias. Então, para cada faixa etária, nós usamos como peso a proporção de pessoas em cada faixa etária do grupo de controle e recalculamos a média (responderada), ajustando para idade.
+
+Vamos fazer um exemplo (fictício) no R para entender isso.
+
+
+```{r ex-ajuste-idade}
+library(fabricatr)
+library(arm)
+library(tidyverse)
+
+set.seed(123)
+smoking <- fabricate(
+  smoke_status = add_level(
+    N = 3, status = c("não-fumante", "p-cachimbo-charuto",  "s-cigarro"),
+    mean_age = c(55, 60, 50),
+    qtde_pessoas = c(15000,6000, 10000)
+    ),
+  person_id = add_level(
+    N = qtde_pessoas, age = rpois(N, mean_age),
+    death = draw_binary(N = N, prob = invlogit(-4.5 + .1*(age - mean(age)) + .525*ifelse(status == "s-cigarro", 1,0)))
+  )
+)
+smoking <- smoking %>%
+  mutate(faixa_etaria = case_when(age < 50 ~ "30-50",
+                                  age < 60 ~ "51-60",
+                                  age < 70 ~ "61-70",
+                                  .default = "70+")) 
+# death rate
+# unique(as.factor(smoking$status))
+# as.numeric(unique(as.factor(smoking$status)))
+
+smoking %>%
+  group_by(status) %>%
+  summarise(death_rate = 1000*sum(death)/n())
+
+aux <- smoking %>%
+  group_by(faixa_etaria, status) %>%
+  summarise(death_per_age = sum(death),
+         num_per_age = n(),
+         death_age_thousands = death_per_age/num_per_age)
+
+adustment_table <- aux %>%
+  filter(status == "não-fumante") %>%
+  ungroup() %>%
+  mutate(total = sum(num_per_age)) %>%
+  group_by(faixa_etaria) %>%
+  summarise(num = num_per_age,
+            total = total,
+            prop_grupo_controle = num_per_age/total)
+
+tabela <- aux %>%
+  inner_join(adustment_table, by = join_by(faixa_etaria)) %>%
+  ungroup() %>%
+  group_by(status) %>%
+  summarise(death_age_adjusted = 1000*sum(prop_grupo_controle*death_age_thousands),
+            alternative_computation = 1000*weighted.mean(x=death_age_thousands, w=prop_grupo_controle))
+  
+
+
+kable(tabela, caption = "Subclassificação - exemplo simulado")
+```
+
+```{r idade-ajustada}
+data <- data.frame(
+  Group = c("Non-smokers", "Cigar/pipe smokers", "Cigarette smokers"),
+  Canada = c(20.2, 35.5, 19.8),
+  UK = c(11.3, 14.8, 11.0),
+  US = c(13.5, 21.2, 13.7)
+)
+
+# R Markdown code for the table
+
+kable(data, caption = "Age adjusted death rates per 1,000 person-years Cochran 1968, apud Cunnigham 2022 ")
+```
 
 Cochran, W. G. 1968. “The Effectiveness of Adjustment by Subclassification in Removing Bias in Observational Studies.” Biometrics 24 (2): 295–313.
