@@ -97,13 +97,15 @@ smoking <- smoking %>%
                                   age < 60 ~ "51-60",
                                   age < 70 ~ "61-70",
                                   .default = "70+")) 
-# death rate
-# unique(as.factor(smoking$status))
-# as.numeric(unique(as.factor(smoking$status)))
+smoking <- smoking %>%
+  mutate(status = gsub("s-cigarro", "cigarro",status ),
+         status = gsub("p-cachimbo-charuto", "cachimbo-charuto", status ))
 
-smoking %>%
+tabela_sem_ajuste <- smoking %>%
   group_by(status) %>%
   summarise(death_rate = 1000*sum(death)/n())
+
+kable(tabela_sem_ajuste, caption = "exemplo simulado")
 
 aux <- smoking %>%
   group_by(faixa_etaria, status) %>%
@@ -127,8 +129,6 @@ tabela <- aux %>%
   summarise(death_age_adjusted = 1000*sum(prop_grupo_controle*death_age_thousands),
             alternative_computation = 1000*weighted.mean(x=death_age_thousands, w=prop_grupo_controle))
   
-
-
 kable(tabela, caption = "Subclassificação - exemplo simulado")
 ```
 
