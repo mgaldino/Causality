@@ -6,6 +6,8 @@ output: pdf_document
 header-includes:
    - \usepackage{tikz}
    - \usetikzlibrary{arrows.meta, positioning}
+   - \usepackage{graphicx}
+   - \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
 ---
 
 ```{r setup, include=FALSE}
@@ -144,5 +146,68 @@ data <- data.frame(
 
 kable(data, caption = "Age adjusted death rates per 1,000 person-years Cochran 1968, apud Cunnigham 2022 ")
 ```
+
+## Suposições de identificação
+
+Supondo para simplificar um tratamento binário $T$, e uma covariável categórica $X$, temos:
+
+1. $(Y^1, Y^0) \indep T|X \text{ (Independência Condicional)}$
+
+2. $0 < P(T=1|A) < 1 \text{ (Suporte comum)}$
+
+Temos então a seguinte derivação (usando o fato de os resultados potenciais são independentes do *treatment assignment*, condicional à covariável) e a *switching equation* no último passo:
+
+\begin{align}
+   \mathbb{E}[Y^1-Y^0|X] & = \mathbb{E}[Y^1 - Y^0 | X, T=1] \\
+            & = \mathbb{E}[Y^1| X, T=1] - \mathbb{E}[Y^0| X,T=0] \\
+            & = \mathbb{E}[Y| X, D=1] - \mathbb{E}[Y| X, D=0]
+\end{align}
+
+E o estimador que usamos pode ser representado (supondo suporte comum) como:
+
+$\widehat{\delta_{ATE}} = \sum_{x\in X}{(\mathbb{E}[Y| X=x, D=1] - \mathbb{E}[Y| X=x, D=0])P(X=x)}$
+
+E o que estamos fazendo é computar a média do efeito do tratamento condicional ponderado pela distribuição de $X$.
+
+Para identificar o ATE, nós precisamos supor independência condicional a ambos os resultados potenciais. Se porém isso for crível apenas para $Y^0$, podemos estimar o ATT. Basta lembrarmos que $\mathbb{E}[Y_i|T_i=1] - \mathbb{E}[Y_i|T_i=0] =  \mathbb{E}[Y_i^1 - Y_i^0|T_i=1] + \mathbb{E}[Y_i^0|T_i=1] - \mathbb{E}[Y_i^0|T_i=0]$
+
+## Limites da Subclassificação
+
+Um dos problemas do método de subclassificação é que ele só funciona para variáveis categóricas. Se eu usasse a idade como uma variável discreta, rapidamente encontraríamos casos em que não conseguiria calcular os pesos para determinadas idades em certos grupos. Com mais variáveis, a combinação aumenta exponencialmente, tornando o método inviável.
+
+## Matching
+
+A técnica de matching trata os resultados potenciais como *missing data*. Assim, pudermos supor CIA com credibilidade, pelo menos com relação a $Y^0$, então podemos imputar esses resultados potenciais e estimar o ATT. A ideia é achar uma unidade a mais similar possível a unidade tratada para servir como contrafactual. Assim, poderíamos computar "diretamente" o ATT, já que teríamos os $Y^1$ e $Y^0$ para cada unidade, este último imputado.
+
+Há dois grandes grupos de métodos de matching: exato e aproximado. 
+
+## Matching exato
+
+Nesse método, nós achamos uma unidade (ou mais) que tenham um valor exatamente igual nas covariáveis, e imputamos o controle.
+
+## Matching aproximado
+
+Para aproximar o matching, utilizamos alguma noção de distância entre variáveis. Para mais de uma variável, podemos utilizar algumas métricas de distância. A primeira é a distância euclidiana (supondo $K$ variáveis).
+
+$$
+\lVert X_i - X_j \rVert = \sqrt{(X_i - X_j)'(X_i - X_j)}
+$$
+$$
+\lVert X_i - X_j \rVert = \sqrt{\sum_{n=1}^k(X_{ni} - X_{nj})}
+$$
+A distância euclidiana utiliza a escala das próprias variáveis, então é comum usar a distância euclidiana normalizada:
+
+$$
+\lVert X_i - X_j \rVert = \sqrt{\sum_{n=1}^k(\frac{X_{ni} - X_{nj})}{\hat{\sigma}_n^2}}
+$$
+Outra métrica muito usada é a distância de Mahalanobis, que basicamente divide pela covariância (amostral) entre as variáveis em vez da variância.
+
+## Viés
+
+Uma vez que fizemos o matching entre unidades, qual nosso estimador? Lemrbando que o estimando é o ATT.
+$$
+\widehat{\delta}_{ATT} = \dfrac{1}{N_T} \sum_{D_i=1} (Y_i - Y_{j(i)})
+$$
+
 
 Cochran, W. G. 1968. “The Effectiveness of Adjustment by Subclassification in Removing Bias in Observational Studies.” Biometrics 24 (2): 295–313.
