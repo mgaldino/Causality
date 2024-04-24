@@ -1,0 +1,200 @@
+---
+title: "Aula IV"
+author: "Manoel Galdino"
+date: "2024-03-07"
+output: pdf_document
+header-includes:
+   - \usepackage{tikz}
+   - \usetikzlibrary{arrows.meta, positioning}
+   - \usepackage{graphicx}
+   - \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introdução
+
+Considere o seguinte DAG canônico de Variáveis Instrumentais:
+
+
+```{=latex}
+\begin{tikzpicture}[>={Latex[width=2mm,length=2mm]},
+                    node distance=1.2cm and 1.2cm]
+  % Nós
+  \node (U) {$U$};
+  \node (T) [above left=of U] {$T$};
+  \node (Y) [above right=of U] {$Y$};
+  \node (Z) [left=of T] {$Z$};
+
+  % Arestas
+  \draw[->] (T) -- (Y);
+  \draw[->, dashed] (U) -- (T);
+  \draw[->, dashed] (U) -- (Y);
+  \draw[->] (Z) -- (T);
+\end{tikzpicture}
+```
+
+
+Nós vemos que o efeito causal do tratamento $T$ é confundido pela variável não observada $U$, já que temos um *backdoor* aberto. Porém, a variável $Z$ não tem nenhum caminho aberto para $Y$ exceto via $T$, isto é, $T$ é um mediador do efeito causal de $Z$.
+
+Do ponto de vista não paramétrico (DAGs), dizemos que a variável $Z$ é uma candidata a variável instrumental (IV) se:
+
+1. $Z$ está conectado a X no grafo original. Condição de relevância.
+
+2. No grafo em que a seta de $X$ para $y$ é removida, $Z$ é d-separado de $Y$. Exclusion Restriction.
+
+Remark: Pode acontecer de ser necessário controlar para uma conjunto de covariáveis $X$ para que a segunda condição seja satisfeita. Chamamos isso de IV condicional. Quando isso será satisfeito?
+
+
+3. O conjuntode covariáveis de controle $X$ contém apenas não-descendentes de $Y$.
+
+2. $X$ d-separa $Z$ de $Y$ no grafo $G'$ em que removemos a flecha de $T$ para $Y$.
+
+3. $X$ não d-separa $Z$ de $T$ no novo grafo $G'$.
+
+Considere o DAG abaixo.
+
+
+```{=latex}
+\begin{tikzpicture}[>={Latex[width=2mm,length=2mm]},
+                    node distance=1.2cm and 1.2cm]
+  % Nós
+  \node (U) {$U$};
+  \node (T) [below left=of U] {$T$};
+  \node (Y) [below right=of U] {$Y$};
+  \node (Z) [left=3cm of T] {$Z$};
+  \node (W) [above left=of T] {$W$};
+  \node (L) [below left=of T] {$L$};
+  % Arestas
+  \draw[->] (T) -- (Y);
+  \draw[->, dashed] (U) -- (T);
+  \draw[->, dashed] (U) -- (Y);
+  \draw[->] (W) -- (T);
+  \draw[->] (L) -- (T);
+  \draw[->] (W) -- (L);
+  \draw[->] (W) -- (Z);
+  \draw[->] (L) -- (Z);
+\end{tikzpicture}
+```
+
+Será que $Z$ pode ser uma IV? Vamos verificar as duas condições. É fácil ver que $Z$ está conectado a $T$, já que temos dois caminhos abertos, um via $W$ e outro via $L$ (e ainda um via $W$ via $L$). Portanto, a primeira condição está satisfeita. Note que se eu controlar simultaneamente para $W$ e $L$, então eu fecho todos os caminhos abertos.
+
+Com relação à segunda condição, Remover a flecha de $T$ para $Y$ é, efetivamente, ter um novo DAG:
+
+
+```{=latex}
+\begin{tikzpicture}[>={Latex[width=2mm,length=2mm]},
+                    node distance=1.2cm and 1.2cm]
+  % Nós
+  \node (U) {$U$};
+  \node (T) [below left=of U] {$T$};
+  \node (Y) [below right=of U] {$Y$};
+  \node (Z) [left=3cm of T] {$Z$};
+  \node (W) [above left=of T] {$W$};
+  \node (L) [below left=of T] {$L$};
+  % Arestas
+  \draw[->, dashed] (U) -- (T);
+  \draw[->, dashed] (U) -- (Y);
+  \draw[->] (W) -- (T);
+  \draw[->] (L) -- (T);
+  \draw[->] (W) -- (L);
+  \draw[->] (W) -- (Z);
+  \draw[->] (L) -- (Z);
+\end{tikzpicture}
+```
+
+Nesse DAG, $Z$ não está d-separado de $Y$, pois existe um caminho aberto para $Y$ via $L$. Portanto, controlando para $L$ (mas não $W$), tenho um instrumento que passa nas duas condições.
+
+
+
+ela está correlacionada com o tratamento $T$, e causa $Y$ apenas via $T$.
+
+Itens a falar:
+Apenas por (exclusion restriction)
+
+Se houver efeito heretogêneo (apenas mulheres mudam comportamento em razão do instrumento), então estamos estimando o efeito apenas para aquele subgrupo (são os compliers com o instrumento).
+
+Se o instrumento explicar pouco da variação no Tratamento, então teremos pouca variação no tratamento para explicar a variação em Y. Ou seja, o sinal é fraco. Isso se traduz em baixo poder estatístico.
+
+## MQO em 2 Estágios
+
+Considere novamente o DAG canônico para IV. Como poderíamos estimar o efeito causal de $T$ sobre $Y$?
+
+
+```{r sim-dag-canonico, message=FALSE, results='asis'}
+library(stargazer)
+
+n <- 1000
+
+set.seed(123)
+z <- rnorm(n)
+u <- rnorm(n, 0 , 3)
+treatment <- rbinom(n, 1, plogis(z - u + rnorm(n, 0, 2)))
+
+y <- 2*treatment + u
+
+reg_vies <- lm(y ~ treatment)
+summary(reg_vies)
+
+reg_1s <- lm(treatment ~ z)
+reg_2s <- lm(y ~ predict(reg_1s))
+stargazer(reg_vies, reg_1s, reg_2s, type = "latex",  title="OLS e 2SLS")
+```
+
+```{r sim-dag-canonico-n, cache=TRUE}
+library(tidyverse)
+library(ggplot2)
+
+simulate_and_fit <- function(n) {
+  z <- rnorm(n)
+  u <- rnorm(n, 0, 3)
+  treatment <- rbinom(n, 1, plogis(z - u + rnorm(n, 0, 2)))
+  y <- 2 * treatment + u
+  
+  # Naive regression
+  reg_vies <- lm(y ~ treatment)
+  
+  # 2SLS
+  reg_1s <- lm(treatment ~ z)
+  predicted_treatment <- predict(reg_1s)
+  reg_2s <- lm(y ~ predicted_treatment)
+  
+  # Return coefficients
+  tibble(
+    naive_coef = coef(reg_vies)[2],
+    tsls_coef = coef(reg_2s)[2]
+  )
+}
+
+
+# Sample sizes to simulate
+sample_sizes <- seq(1000, 100000, by = 1000)
+
+# Use map to apply the function to each sample size
+results <- tibble(sample_size = sample_sizes) %>%
+  mutate(
+    simulation_results = map(sample_size, simulate_and_fit)
+  ) %>%
+  unnest(cols = c(simulation_results))
+
+results %>%
+  pivot_longer(cols = c(naive_coef, tsls_coef), names_to = "method", values_to = "coefficient") %>%
+  ggplot(aes(x = sample_size, y = coefficient, color = method)) +
+  geom_line() +
+  geom_smooth(data = . %>% filter(method == "2sls_coef"), method = "lm", se = FALSE, color = "red") +
+
+  labs(
+    title = "Convergence of Regression Coefficients with Increasing Sample Size",
+    x = "Sample Size",
+    y = "Estimated Coefficient",
+    color = "Method"
+  ) +
+  theme_minimal() +
+  scale_color_manual(values = c("naive_coef" = "blue", "tsls_coef" = "red")) +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    legend.title = element_blank()
+  )
+```
