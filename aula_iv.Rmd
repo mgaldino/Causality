@@ -43,16 +43,11 @@ Do ponto de vista não paramétrico (DAGs), dizemos que a variável $Z$ é uma c
 
 1. $Z$ está conectado a X no grafo original. Condição de relevância.
 
-2. No grafo em que a seta de $X$ para $y$ é removida, $Z$ é d-separado de $Y$. Exclusion Restriction.
+2. No grafo em que a seta de $T$ para $y$ é removida, $Z$ é d-separado de $Y$. Exclusion Restriction.
 
-Remark: Pode acontecer de ser necessário controlar para uma conjunto de covariáveis $X$ para que a segunda condição seja satisfeita. Chamamos isso de IV condicional. Quando isso será satisfeito?
+3. A variável instrumental $Z$ não compartilha causa comum com $y$, incluindo, portanto, não ser descendente de $T$ (quando $T$ causa $Y$).
 
-
-3. O conjuntode covariáveis de controle $X$ contém apenas não-descendentes de $Y$.
-
-2. $X$ d-separa $Z$ de $Y$ no grafo $G'$ em que removemos a flecha de $T$ para $Y$.
-
-3. $X$ não d-separa $Z$ de $T$ no novo grafo $G'$.
+Remark: Pode acontecer de ser necessário controlar para uma conjunto de covariáveis $X$ para que a segunda condição seja satisfeita. Chamamos isso de IV condicional.
 
 Considere o DAG abaixo.
 
@@ -79,10 +74,11 @@ Considere o DAG abaixo.
 \end{tikzpicture}
 ```
 
-Será que $Z$ pode ser uma IV? Vamos verificar as duas condições. É fácil ver que $Z$ está conectado a $T$, já que temos dois caminhos abertos, um via $W$ e outro via $L$ (e ainda um via $W$ via $L$). Portanto, a primeira condição está satisfeita. Note que se eu controlar simultaneamente para $W$ e $L$, então eu fecho todos os caminhos abertos.
+Será que $Z$ pode ser uma IV? Vamos verificar as condições. É fácil ver que $Z$ está conectado a $T$, já que temos dois caminhos abertos, um via $W$ e outro via $L$ (e ainda um via $W$ via $L$). Portanto, a primeira condição está satisfeita. Note que se eu controlar simultaneamente para $W$ e $L$, então eu fecho todos os caminhos abertos.
 
 Com relação à segunda condição, Remover a flecha de $T$ para $Y$ é, efetivamente, ter um novo DAG:
 
+Por fim, $Z$ não compartilha causa comum com $Y$.
 
 ```{=latex}
 \begin{tikzpicture}[>={Latex[width=2mm,length=2mm]},
@@ -107,20 +103,29 @@ Com relação à segunda condição, Remover a flecha de $T$ para $Y$ é, efetiv
 
 Nesse DAG, $Z$ não está d-separado de $Y$, pois existe um caminho aberto para $Y$ via $L$. Portanto, controlando para $L$ (mas não $W$), tenho um instrumento que passa nas duas condições.
 
-
-
-ela está correlacionada com o tratamento $T$, e causa $Y$ apenas via $T$.
-
-Itens a falar:
-Apenas por (exclusion restriction)
-
-Se houver efeito heretogêneo (apenas mulheres mudam comportamento em razão do instrumento), então estamos estimando o efeito apenas para aquele subgrupo (são os compliers com o instrumento).
-
-Se o instrumento explicar pouco da variação no Tratamento, então teremos pouca variação no tratamento para explicar a variação em Y. Ou seja, o sinal é fraco. Isso se traduz em baixo poder estatístico.
-
 ## MQO em 2 Estágios
 
 Considere novamente o DAG canônico para IV. Como poderíamos estimar o efeito causal de $T$ sobre $Y$?
+
+Uma possibilidade é a chamada forma reduzida, que pode ser derivada a partir da suposição de independência. Antes, vamos introduzir uma notação:
+
+A notação $Y^{T=t,Z=z}$ indica o resultado potencial para um nível do tratamento $t$ efetivamente recebido, que pode ser $0$ ou $1$, e para um nível do *treatment assignment*, que pode ser $0$ ou $1$, para um instrumento binário.
+
+E também temos um status potencial do tratamento (em oposição ao tratamento observado): $T^1_i$ é o status do tratamento quando $Z=1$. Similarmente, $T^0_i$ é o status do tratamento quando $Z=0$.
+
+E aqui temos uma nova *switching equation*:
+
+$T_i = T^0_i + (T^1_i - T^0_i)Z_i$
+
+\begin{align}
+   E\big[Y_i\mid Z_i=1\big]-E\big[Y_i\mid Z_i=0\big] & = E\big[Y_i(D_i^1,1)\mid Z_i=1\mid]-
+   E\big[Y_i(D_i^0,0)\mid Z_i=0\big]
+   \\
+                                    & = E[Y_i(D_i^1,1)] - E[Y_i(D_i^0,0)]  
+\end{align}
+
+O estimador é o efeito causal (total) de $Z$ sobre $Y$. Em um experimento, isso é chamado de $intent to treat$, pois se a aleatorização é o instrumento, então é o efeito causal da intenção de tratar. 
+
 
 
 ```{r sim-dag-canonico, message=FALSE, results='asis'}
@@ -142,6 +147,8 @@ reg_1s <- lm(treatment ~ z)
 reg_2s <- lm(y ~ predict(reg_1s))
 stargazer(reg_vies, reg_1s, reg_2s, type = "latex",  title="OLS e 2SLS")
 ```
+
+Uma regra de bolso, baseada em um artigo de Stock & Yogo (2002), que é a estatística F da regressão do primeiro estágio deve ser maior que 10.
 
 ```{r sim-dag-canonico-n, cache=TRUE}
 library(tidyverse)
@@ -198,3 +205,89 @@ results %>%
     legend.title = element_blank()
   )
 ```
+
+## Principais usos de IV
+
+### Experimentos
+
+Quando pesquisadores utilizam o processo de assignment como instrumento para lidar com problema de non-compliance. Estimativas do Local Average Treatment Effect são críveis. Contraposição a intent-to-treat estimates.
+
+### Regras com variação quasi-aleatória
+
+Kin (2019) utiliza uma regra na Suécia que obriga cidades com poplução acima de certo nível a adotar democracia direta. Dinas (2014) utiliza idade para votar no momento da eleição como instrumento para comparecimento eleitoral do eleitor.
+
+### Teoria
+
+Quando a restrição de exclusão é baseada em teoria ou conhecimento substantivo. Aqui estão os instrumentos baseados em geografia ou clima (por exemplo, proximidade a faculdade como instrumento para ensino superior) ou (Zhu, 2017) que usou proximidade geográfica de cinco centros comerciais fora da China (ponderados pelo PIB dos centros comerciais) como instrumento para presença de multinacional (que causaria corrupção). Há o clássico instrumento de chuva como instrumento para, por exemplo, comparecimento eleitoral de eleitores democratas.
+
+Mellon (2023) revisou 289 estudos e concluiu que 195 variáveis distintas foram conectadas com chuva, o que significa que podem ser potenciais violações da restrição de exclusão.
+
+Cinelli and Hazlett
+
+Freidman et. al (2000) usaram origem legal (francesa, inglesa, sueca etc.) como instrumento para qualidade das instituições. Djankov et al. (2003) usaram origem legal como instrumento para grau de formalismo de instituições.
+
+Glaeser et al. (2004) usaram origem legal como instrumento para restrições ao executivo ("executive constraints").
+
+Henderson and Brooks, 2016, usam chuva ao redor do dia da eleição como instrumento para votação de candidatos democratas, e concluem que aumento da chuva reduz comparecimento que causa democratas terem comportamento legislativo mais direitoso.
+
+##Efeito heterogêneo
+
+
+Se houver efeito heretogêneo (apenas mulheres mudam comportamento em razão do instrumento, por exemplo), então estamos estimando o efeito apenas para aquele subgrupo (são os compliers com o instrumento).
+
+Se o instrumento explicar pouco da variação no Tratamento, então teremos pouca variação no tratamento para explicar a variação em Y. Ou seja, o sinal é fraco. Isso se traduz em baixo poder estatístico.
+
+Para discutir efeito casual heterogêneo, vamos utilizar um estudo em ciência política (White, 2019). Qual o efeito de misdemeanor (algo como contravenção penal) sobre comparecimento eleitoral? O aturo argumenta que o efeito deve variar por raça (maior para negros que brancos), de modo que o efeito causla é heterogêneo. Segundo o autor, casos são atribuídos aleatoriamente para diferentes cortes judiciais, e elas variam em sua leniência (ou severidade). Aqui, o tratamento é a condenação ($1$ se condenado, $0$ se não), e temos uma variável instrumental, o sorteio do juiz mais ou menos leniente.
+
+Alguns acusados têm tantas evidências que serão condenados não importa para que tipo de corte são enviados. Outros, podem sersempre absolvidos, não importa o juiz. Há os !azarados", que só serão condenados se enviados para a corte severa. O que não faz sentido é ter alguém que só é condenado se enviado para um juiz leniente e absolvido se enviado para um severo.
+Nós iremos agrupar esses quatro tipos (incluindo o último) em quatro tipos:
+
+Os primeiros são chamado de always-takers. Sempre recebem o tratamento (são presos), não importa o que foi atribuído a eles pelo mecanismo de atribuição. O segundo são os never takers, que nunca recebem o tratamento. Por fim, o terceiro grupo são os compliers, que seguem o tratamernto prescrito e o quarto grupo são os defiers, aqueles que fazem o contrário do prescrito. Nesse caso, não faz muito sentido imaginar que existem os defiers, mas teoricamente é possível.
+
+Digmos que o efeito causal do tratamento é heterogêneo, isto é, $\delta_i = Y^1_i - Y^0_i$.
+
+Nesse caso, não podemos mais estimar o efeito causal geral (ATE), pois o efeito causla é heterogêneo e o instrumento só explica a variação no tratamento para os compliers.
+
+### Suposições para estimar o LATE
+Além das suposições que já discutimos, vale sempre lembrar que temos também a SUTVA.
+
+Resultados potenciais para unidade $i$ não estão relacionadas ao tratamento que $j$ recebe. Claramente existe potencial para SUTVA ser violada no estudo de encarceramento e voto. Se dois irmãos (indivíduo $i$ e $j$) são acusados e um deles é preso, é possível que o tratamento de um deles impacte a probabilidade de voto do outro e vice-versa. Salvo engano, White não discute essa possibilidade de violação da suposição, o que é problemático. Mas vamos supor que SUTVA está garantido.
+
+2. Vale lembrar também que Independência é diferetne da restrição de exclusão
+
+Também chamada de *as good as random assignment* e *no confounding for the effect of Z on Y*. Afirma que a IV é independente dos resultados potenciais e das potenciais atribuições de tratamento. Em termos de nosso DAG, quer dizer que $Z$ não compartilha causa comum com $Y$. 
+
+Essa suposição parece tranquilamente satisfeita no estudo em questão, já que a atribuição da corte é aleatória e parece difícil imaginar que algo que causa a leniência da corte ser causado por alguma variável que também causa o comparecimento. Aqui o DAG:
+
+## Restrição de Exclusão
+
+## Monoticidade
+
+Por fim, precisamos assumir monoticidade. Ela requer que a variável instrumental opera (fracamente) em todas as direções para todos os indivíduos. Ou seja, todo mundo que é afetado pelo instrumento é afetado da mesma maneira. Em outras palavras, o instrumento apenas move as pessoas do controle para o tratamento (ou não move a pessoa), mas nunca o contrário. Ou seja, estamos assumindo que não há defiers na nossa população.
+
+Matematicamente e de maneira geral, dizemos que a monoticidade é válida quando $T^{Z=1} >= T^{Z=0}$ para todas as unidades.
+
+Com essas suposições, nós estiamos o LATE: Local Average Treatment Effect of T on Y. Isso porque nosso estimador é:
+
+\begin{align}
+  \mathbb{E}[Y(Z=1) - Y(Z=0)] = \\
+  =& \mathbb{E}[Y(Z=1) - Y_i(Z=0)|T^1 = 1, T^0 = 1]P(T^1 = 1, T^0 = 1) \text{ always-takers} \\
+  +& \mathbb{E}[Y(Z=1) - Y_i(Z=0)|T^1 = 0, T^0 = 0]P(T^1 = 0, T^0 = 0) \text{ never-takers} \\
+  +& \mathbb{E}[Y(Z=1) - Y_i(Z=0)|T^1 = 1, T^0 = 0]P(T^1 = 1, T^0 = 0) \text{ compliers} \\
+  +& \mathbb{E}[Y(Z=1) - Y_i(Z=0)|T^1 = 0, T^0 = 1]P(T^1 = 0, T^0 = 1) \text{ defiers}
+\end{align}
+
+Porém, sabemos que o instrumento não tem efeito causal sobre always-takers nem never-takers, então o efeito causal é zero para esses grupos. E a proporção de defiers é zero, de modo que ficamos apenas com a parte dos compliers. E nesse grupo, $Z = T$, de modo que o efeito do instrumento é o efeito do tratamento. Então podemos reescrever como:
+
+
+$$\delta_{IV,LATE} = \mathbb{E}[Y(1) - Y^0)|T^1 - T^0 = 1]$$
+
+Vejam que o denominador nos dá a proporção da população que mudou seu status por causa do instrumento.
+
+## Referências
+
+Henderson, J., & Brooks, J. (2016). Mediating the electoral connection: The information effects of voter signals on legislative behavior. The Journal of Politics, 78(3), 653-669.
+
+Mellon, J. (2023). Rain, Rain, Go Away: 195 Potential Exclusion-Restriction Violations for Studies Using Weather as an Instrumental Variable. Available at SSRN 3715610.
+
+White, A. (2019). Misdemeanor disenfranchisement? The demobilizing effects of brief jail spells on potential voters. American Political Science Review, 113(2), 311-324.
