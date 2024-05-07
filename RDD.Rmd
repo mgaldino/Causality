@@ -1,0 +1,463 @@
+---
+title: "Desenho de Regressão Discontínua"
+author: "Manoel Galdino"
+date: "`r Sys.Date()`"
+output: 
+  beamer_presentation:
+    theme: "Madrid"
+    colortheme: "dolphin"
+header-includes:
+  - \usepackage{graphicx}
+  - \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+---
+
+## Características-chave da RDD
+
+A Regressão Discontínua (RDD) é caracterizada por uma variável contínua $X_i$, que determina quem recebe tratamento, denotado por $T_i$ (1 se tratado). Por convenção, $X$ é chamada de "running variable", "assignment variable" ou "forcing variable".
+
+### Determinação do Tratamento
+
+Em um desenho RDD *sharp*, uma unidade é tratada se $X_i \geq c$ e não tratada se $X_i < c$. Assim, $T_i$ é uma função determinística de $X_i$: $T_i = f(X_i)$. A *running variable* determina completamente quem recebe tratamento.
+
+## Fuzzy RDD
+
+- Pode acontecer do ponto da regra não determinar quem recebe ou não o tratamento, mas apenas a probabilidade de receber o tratamento.
+
+- Nesse caso, a regra serve como variável instrumental ao redor do ponto de corte.
+
+- Tudo se passa como se houvesse always-takers e/ou never-takers ao redor do ponto de limiar.
+
+- Ex.: regra de voto determina número de cadeiras. Mas migração partidária altera o número. Então quem fica abaixo do número mínimo em um distrito pode ter cadeiras naquele distrito via migração partidária. São always-takers.
+
+### Observação e Corte
+
+É essencial observar $X$ e conhecer o **ponto de corte** ou **limiar** $c$.
+
+## Identificação em RDD
+
+Uma das suposições da RDD é que ela requer a continuidade da variável $X$ para identificação, embora, na prática, alguns estudos de RDD tenham usado *running variables* discretas. A continuidade de $X$ é necessária porque a identificação ocorre no limite.
+
+### Estimativa dos Efeitos do Tratamento
+
+A comparação de $\lim_{x \to c} E[Y_i | X_i = x]$ com $\lim_{x \leftarrow c} E[Y_i | X_i = x]$ fornece uma estimativa dos efeitos do tratamento (note a direção das setas).
+
+Esta comparação é equivalente a: $\lim_{x \to c} E[Y_i | X_i = x, T_i=0]$ e $\lim_{x \leftarrow c} E[Y_i | X_i = x, T_i=1]$, uma vez que, neste exemplo, à direita de $c$ todos recebem tratamento; à esquerda, ninguém recebe. Portanto:
+
+- $\lim_{x \to c} E[Y_i | X_i = x] \approx E[Y_{0i} | X_i = c]$
+- $\lim_{x \leftarrow c} E[Y_i | X_i = x] \approx E[Y_{1i} | X_i = c]$
+
+## Suposição de continuidade
+
+- A suposição de continuidade é tão crítica que vale discutirmos um pouco mais sobre ela.
+- Se há continuidade, isso significa que, na auência do ponto de corte $c$, x (e outras covariáveis) não devem apresentar descontinuidade.
+- Ex.: Suponha que estamos interessados em estudar o efeito da incumbência sobre a chance de reeleição futura ou riqueza futura desses políticos.
+- Habilidades e carisma são variáveis que devem influenciar tanto a chance de serem incumbentes como os resultados de interesse. Em um RDD, podemos usar *close elections* para estimar o efeito. E a suposição de continuidade requer que carisma e habilidades não tenham descontinuidade no *cut off* de 50%. Na verdade, apenas o resultado eleitoral é descontínuo no *cut off*, que vai de não-eleito para eleito.
+
+## Suposições na RDD
+
+### Suposição de Não-manipulação com Precisão
+
+A identificação dos efeitos do tratamento na RDD baseia-se na premissa de que $X$ atua como um aleatorizador ao redor de $c$. Imagine que $X$ seja uma variável aleatória uniforme usada para atribuir tratamento. Se $X \geq c$, uma unidade recebe tratamento. Na RDD, $X$ tem o mesmo papel, exceto que não assumimos que $X$ é independente do resultado $Y$. Na maioria das aplicações, $X$ e $Y$ são correlacionados de alguma forma.
+
+### Problemas de Manipulação
+
+No entanto, se $c$ não for arbitrário ou tiver uma relação determinística com $Y$, ou se as unidades puderem — com precisão — determinar seus escores $X$ e, assim, escolher receber tratamento ou não, então $X$ ao redor de $c$ não se comporta mais como um aleatorizador — há alguma forma de auto-seleção que poderia depender de variáveis não observáveis.
+
+## Testabilidade da Suposição de não-Manipulação
+
+Em parte, isso é testável. As unidades não pareceriam semelhantes perto de $c$ e haveria um "acúmulo" próximo a $c$. No entanto, não podemos descartar a manipulação com precisão apenas com dados — devemos argumentar isso com conhecimento do assunto (é uma restrição de exclusão).
+
+## Estimação em RDD
+
+### Problema de Complete Overlapping
+
+Um problema chave na estimação em RDD estrita é a completa falta de sobreposição.
+
+Em matching, dicustimos como a ausência de sobreposição gerava problemas de extrapolação.
+
+Sobreposição requer que $0 < P(D_i = 1 | X_i) < 1$ para o domínio de $X_i$. No domínio da *running vairable* $X_i$, isso claramente não é satisfeito. Em RDD estrita, temos $P(D_i = 1 | X_i < c) = 0$ e $P(D_i = 1 | X_i \geq c) = 1$.
+
+### Dependência de Extrapolação
+
+Devido à falta de sobreposição, dependemos de extrapolação para estimar os efeitos do tratamento. Dito de outra forma, podemos não ser capazes de estimar corretamente os efeitos do tratamento se errarmos a forma funcional $Y_i = f(X_i)$. Novamente, essa foi uma motivação para usar matching. 
+
+O problema é que nunca sabemos se acertamos, então a especificação do modelo é uma questão chave na estimação RDD.
+
+## Métodos de Estimação
+
+O problema sugere a necessidade de um método de estimação não paramétrico. Utilizaremos métodos paramétricos, não paramétricos (ou semiparamétricos) para tentar abordar essas questões.
+
+### Identificação no Limite
+
+A identificação dos efeitos do tratamento ocorre no limite, à medida que $X_i \rightarrow c$. Quanto mais usarmos observações distantes de $c$ em $X$, mais dependeremos de extrapolação e das suposições sobre a forma funcional.
+
+## Trade-off de Viés-Variância
+
+- **Mais perto de c:** Melhor em termos de precisão, mas pode haver uma amostra insuficiente. Resulta em menos viés, mas mais variância.
+- **Mais distante de c:** Dependemos menos de extrapolação, mas introduzimos mais viés, mesmo com menor variância.
+
+### Métodos de Largura de Banda Ótima
+
+A ideia é restringir a estimativa a uma janela ao redor de $X_i = c$, que pode ter tamanhos diferentes à esquerda ou à direita. Estes métodos buscam equilibrar a precisão das estimativas minimizando viés e variância conforme a proximidade do ponto de corte $c$.
+
+## Regras arbitrárias
+
+Atribuição de "coisas" a partir de regras com pontos de cortes
+
+Bolsa família: a partir de certa renda
+
+Educação: aprovação no ensino superior a partir de certa nota de corte
+
+Espacial: polítia pública para donos de áreas em abaixo ou acima de certas áreas.
+
+Data: regras para aposentadoria, idade para entrar na escola, data para perdão de dívida: Desenrola: "...cujas dívidas tenham sido incluídas no cadastro de inadimplentes no período entre 1º de janeiro de 2019 e 31 de dezembro de 2022".
+
+Política: regras de número de vereadores, regras de população para ter segundo turno, regras para ter biometria etc.
+
+## Simulação
+
+```{r}
+## Basic RD Model
+set.seed(123)
+N <- 1000 # number of observations
+X <- runif (N , -5,5)
+Y0 <- rnorm ( n =N , mean =X , sd=1) # control potential outcome
+Y1 <- rnorm ( n =N , mean = X+2, sd=1) # treatment potential outcome
+#You only get treatment if X>0
+Treatment <- ( X >= 0)
+# What we observe
+Y = Y1* Treatment + Y0*(1- Treatment )
+```
+
+## Simulação - Treatment assignment
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+## Basic RD Model
+library(ggplot2)
+library(tidyverse)
+
+# df
+df <- data.frame(y=Y, x=X, treatment = Treatment, y0 = Y0, y1=Y1)
+
+```
+
+```{r plot-treatment-assignment, echo=FALSE}
+df %>%
+  ggplot(aes(x=x, y=treatment)) + geom_line() +
+  labs(x = "running variable", y = "Treatment") +
+  theme_minimal()  
+```
+
+## Simulação - Potential Outcomes Y0
+
+
+```{r plot-po-y0, echo=FALSE}
+df %>%
+  ggplot(aes(x=x, y=y0, colour=treatment)) + geom_point() +
+  labs(x = "running variable", y = "Potential Outcome Y0") +
+  scale_colour_manual(values = c("black", "red")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+## Simulação - Potential Outcomes Y1
+
+
+```{r plot-po-y1, echo=FALSE}
+
+df %>%
+  ggplot(aes(x=x, y=y1, colour=treatment)) + geom_point() +
+  labs(x = "running variable", y = "Potential Outcome Y1") +
+  scale_colour_manual(values = c("green", "blue")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+## Simulação - Potential Outcomes Y1 e Y0
+
+
+```{r plot-po-y1-Y0, echo=FALSE}
+df_long <- df %>%
+  pivot_longer(
+    cols = c("y0", "y1"),
+    names_to = "outcome_type",
+    values_to = "outcome"
+  )
+
+ggplot(df_long, aes(x = x, y = outcome, colour = interaction(treatment, outcome_type))) +
+  geom_point() +
+  scale_colour_manual(values = c("FALSE.y0" = "black", "TRUE.y0" = "red",
+                                 "FALSE.y1" = "green", "TRUE.y1" ="blue")) +
+  labs(x = "Running Variable", y = "Potential Outcome") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+## Simulação - Y observado
+```{r plot-observed, echo=FALSE}
+
+ggplot(df_long, aes(x = x, y = y, colour = treatment)) +
+  geom_point() +
+  scale_colour_manual(values = c("black", "blue")) +
+  labs(x = "Running Variable", y = "Resultados observados - Y") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+## Simulação - Estimativa (1)
+```{r plot-estimator-1, echo=FALSE}
+
+
+# Calculate means for each treatment group
+mean_values <- df_long %>%
+  group_by(treatment) %>%
+  summarise(mean_y = mean(y, na.rm = TRUE))
+
+# Extract means for annotations
+mean_black <- mean_values$mean_y[mean_values$treatment == FALSE]
+mean_blue <- mean_values$mean_y[mean_values$treatment == TRUE]
+
+# Calculate the difference (RDD estimator)
+rdd_estimate <- coef(lm(y ~ treatment, df))[2]
+
+
+# Define the position for the bracket and text
+bracket_height <- max(mean_black, mean_blue) + abs(mean_blue - mean_black)*0.001 
+mid_y <- mean(mean_black, mean_blue)  # Midpoint between means for text
+
+# Create the plot
+ggplot(df_long, aes(x = x, y = y, colour = treatment)) +
+  geom_point() +
+  scale_colour_manual(values = c("black", "blue")) +
+   geom_segment(aes(x = min(x), xend = 0, y = mean_black, yend = mean_black), colour = "black") +
+  geom_segment(aes(x = 0, xend = max(x), y = mean_blue, yend = mean_blue), colour = "blue") +
+  labs(x = "Running Variable", y = "Resultados observados - Y") +
+  theme_minimal()  +  
+  theme(legend.position = "none") +
+  geom_segment(aes(x = 0, y = mean_black, xend = 0, yend = bracket_height), colour = "black") +
+  geom_segment(aes(x = 0, y = mean_blue, xend = 0, yend = bracket_height), colour = "blue") +
+  annotate("text", x = 1.5, y = mid_y, label = paste("RDD Estimator: ", round(rdd_estimate, 2), "-5 < x < 5"), 
+           size = 5, colour = "red", vjust = -1)
+```
+
+## Simulação - Estimativa (2)
+```{r plot-estimator2, echo=FALSE}
+
+df_long <- df_long %>%
+  filter ( x > -1 & x < 1)
+# Calculate means for each treatment group
+mean_values <- df_long %>%
+  group_by(treatment) %>%
+  summarise(mean_y = mean(y, na.rm = TRUE))
+
+# Extract means for annotations
+mean_black <- mean_values$mean_y[mean_values$treatment == FALSE]
+mean_blue <- mean_values$mean_y[mean_values$treatment == TRUE]
+
+# Calculate the difference (RDD estimator)
+rdd_estimate <- coef(lm(y ~ treatment, subset(df, x > -1 & x < 1)))[2]
+
+
+# Define the position for the bracket and text
+bracket_height <- max(mean_black, mean_blue) + abs(mean_blue - mean_black)*0.001
+mid_y <- mean(mean_black, mean_blue)  # Midpoint between means for text
+
+
+# Create the plot
+ggplot(df_long, aes(x = x, y = y, colour = treatment)) +
+  geom_point() +
+  scale_colour_manual(values = c("black", "blue")) +
+   geom_segment(aes(x = min(x), xend = 0, y = mean_black, yend = mean_black), colour = "black") +
+  geom_segment(aes(x = 0, xend = max(x), y = mean_blue, yend = mean_blue), colour = "blue") +
+  labs(x = "Running Variable", y = "Resultados observados - Y") +
+  theme_minimal()  + 
+  theme(legend.position = "none") +
+  geom_segment(aes(x = 0, y = mean_black, xend = 0, yend = bracket_height), colour = "black") +
+  geom_segment(aes(x = 0, y = mean_blue, xend = 0, yend = bracket_height), colour = "blue") +
+  annotate("text", x = .5, y = mid_y, label = paste("RDD Estimator: ", round(rdd_estimate, 2), "-1 < x < 1"), 
+           size = 5, colour = "red", vjust = -1) 
+
+```
+
+## Simulação - Estimativa (3)
+```{r plot-estimator3, echo=FALSE}
+
+df_long <- df_long %>%
+  filter ( x > -.5 & x < .5)
+# Calculate means for each treatment group
+mean_values <- df_long %>%
+  group_by(treatment) %>%
+  summarise(mean_y = mean(y, na.rm = TRUE))
+
+# Extract means for annotations
+mean_black <- mean_values$mean_y[mean_values$treatment == FALSE]
+mean_blue <- mean_values$mean_y[mean_values$treatment == TRUE]
+
+# Calculate the difference (RDD estimator)
+rdd_estimate <- coef(lm(y ~ treatment, subset(df, x > -.5 & x < .5)))[2]
+
+
+# Define the position for the bracket and text
+bracket_height <- max(mean_black, mean_blue) + abs(mean_blue - mean_black)*0.001 
+mid_y <- mean(mean_black, mean_blue)  # Midpoint between means for text
+
+
+# Create the plot
+ggplot(df_long, aes(x = x, y = y, colour = treatment)) +
+  geom_point() +
+  scale_colour_manual(values = c("black", "blue")) +
+  geom_segment(aes(x = min(x), xend = 0, y = mean_black, yend = mean_black), colour = "black") +
+  geom_segment(aes(x = 0, xend = max(x), y = mean_blue, yend = mean_blue), colour = "blue") +
+  labs(x = "Running Variable", y = "Resultados observados - Y") +
+  theme_minimal()  + 
+  theme(legend.position = "none") +
+  geom_segment(aes(x = 0, y = mean_black, xend = 0, yend = bracket_height), colour = "black") +
+  geom_segment(aes(x = 0, y = mean_blue, xend = 0, yend = bracket_height), colour = "blue") +
+  annotate("text", x = .1, y = mid_y, label = paste("RDD Estimator: ", round(rdd_estimate, 2), "-.5 < x < .5"), 
+           size = 5, colour = "red", vjust = -1) 
+
+```
+
+
+## Simulação - Estimativa (4)
+```{r plot-estimator4, echo=FALSE}
+
+df_long <- df_long %>%
+  filter ( x > -.1 & x < .1)
+# Calculate means for each treatment group
+mean_values <- df_long %>%
+  group_by(treatment) %>%
+  summarise(mean_y = mean(y, na.rm = TRUE))
+
+# Extract means for annotations
+mean_black <- mean_values$mean_y[mean_values$treatment == FALSE]
+mean_blue <- mean_values$mean_y[mean_values$treatment == TRUE]
+
+# Calculate the difference (RDD estimator)
+rdd_estimate <- coef(lm(y ~ treatment, subset(df, x > -.1 & x < .1)))[2]
+
+
+# Define the position for the bracket and text
+bracket_height <- max(mean_black, mean_blue) + abs(mean_blue - mean_black) * 0.001  # slightly above the highest line
+
+mid_y <- mean(mean_black, mean_blue)  # Midpoint between means for text
+
+
+# Create the plot
+ggplot(df_long, aes(x = x, y = y, colour = treatment)) +
+  geom_point() +
+  scale_colour_manual(values = c("black", "blue")) +
+   geom_segment(aes(x = min(x), xend = 0, y = mean_black, yend = mean_black), colour = "black") +
+  geom_segment(aes(x = 0, xend = max(x), y = mean_blue, yend = mean_blue), colour = "blue") +
+  labs(x = "Running Variable", y = "Resultados observados - Y") +
+  theme_minimal()  +
+  geom_segment(aes(x = 0, y = mean_black, xend = 0, yend = bracket_height), colour = "black") +
+  geom_segment(aes(x = 0, y = mean_blue, xend = 0, yend = bracket_height), colour = "blue") +
+  annotate("text", x = 0, y = mid_y, label = paste("RDD Estimator: ", round(rdd_estimate, 2), "-.1 < x < .1"), 
+           size = 5, colour = "red", vjust = -1) 
+
+```
+
+## Exemplo de Descontinuidade
+```{r density-plotx, echo=TRUE, message=FALSE, warning=FALSE}
+library(rdrobust)
+library(rddensity)
+library(knitr)
+rdplot(y = df$y, x = df$x, c = 0, p = 1)  # p = 2 for quadratic polynomial fit
+```
+
+
+## Identificação fácil vs Estimação difícil
+
+- Identificação de RDD (com n infinito) é bem robusto
+- Problema é que a estimação depende de extrapolação
+- Extrapolação é um problema difícil
+
+## Suposição de não-manipulação
+-- Densidade (não deve ter diferença se não há seleção)
+```{r density-plot, echo=FALSE, warning=FALSE, message=FALSE}
+library(rdrobust)
+library(rddensity)
+library(knitr)
+# histogram of density test
+ggplot(df,aes(x=x, fill = treatment)) + geom_histogram(binwidth=0.5) +
+xlim(-5,5) + geom_vline(xintercept = 0) + xlab("Running variable")+ scale_colour_manual(values = c("red","blue")) + theme_bw() + theme(legend.position='none')
+```
+
+## teste formal da densidade
+```{r density-test, echo=TRUE}
+rdd <- rddensity(X = df$x, vce="jackknife")
+summary_part1 <- summary(rdd)[1:4]  # Assuming you want to show the first 4 parts here
+print(summary_part1)
+```
+
+## Plot da densidade
+```{r density-plot1, echo=TRUE}
+
+rdplotdensity(rdd, df$x, plotRange = c(-5, 5), plotN = 25, CIuniform = TRUE)
+
+```
+
+## Densidade descontínua - código
+```{r density-plot2, echo=TRUE, eval=FALSE}
+
+# Generate a random sample with a density discontinuity at 0
+set.seed(42)
+x <- rnorm(2000, mean = -0.5)
+x[x > 0] <- x[x > 0] * 2
+
+# Estimation
+rdd <- rddensity(X = x)
+summary(rdd)
+
+# Density plot (from -2 to 2 with 25 evaluation points at each side)
+plot1 <- rdplotdensity(rdd, x, plotRange = c(-2, 2), plotN = 25)
+```
+
+
+
+
+
+
+## Densidade descontínua - results
+```{r density-plot3, echo=FALSE, eval=TRUE}
+
+# Generate a random sample with a density discontinuity at 0
+set.seed(42)
+x <- rnorm(2000, mean = -0.5)
+x[x > 0] <- x[x > 0] * 2
+
+# Estimation
+rdd <- rddensity(X = x)
+summary(rdd)
+```
+
+## Densidade descontínua - plot
+```{r density-plot4, echo=FALSE, eval=TRUE}
+# Density plot (from -2 to 2 with 25 evaluation points at each side)
+rdplotdensity(rdd, x, plotRange = c(-2, 2), plotN = 25)
+```
+
+
+
+
+
+
+## Regressão RDD
+```{r reg-rdd, echo=TRUE, eval=TRUE}
+library(rdrobust)
+# Assuming the cutoff is at x=0
+basic_model <- rdrobust(y = df$y, x = df$x, c = 0)
+summary(basic_model)
+```
+
+## Regressão RDD - summary
+```{r reg-rdd2, echo=FALSE}
+
+summary(basic_model)
+```
+
+
+- Tutorial: https://congressdata.joshuamccrain.com/regression_discontinuity.html
