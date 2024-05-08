@@ -1,0 +1,130 @@
+---
+title: "Dif in Dif"
+author: "Manoel Galdino"
+date: "`r Sys.Date()`"
+output: 
+  beamer_presentation:
+    theme: "Madrid"
+    colortheme: "dolphin"
+header-includes:
+  - \usepackage{graphicx}
+  - \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+---
+
+## Difference in Differences
+
+- Diferença em Diferenças, também chamado de Dif in Dif ou DiD está associado a, com o onome sugere, duas diferenças. Para introduzir esse desenho de pesquisa, vamos pensar cada diferença separa por vez. Uma no tempo (within, outra no espaço (ou entre unidades, between units).
+
+## Diferença no espaço
+
+- Pode acontecer de termos unidades com o tratamento e outras sem. Por exemplo, municípios com urna eletrônica e outros sem, em um mesmo momento no tempo.
+- Como o DAG sugere, o problema aqui é de potencial variável omitida que causa a variação espacial entre unidades e a resposta.
+## Diferença em Diferenças
+
+A ideia do desenho Dif in Dif é justamente combinar as duas diferenças em uma única análise.
+
+Vamos introduzir uma notação de resultado potencial: Seja $Y^a(T)$ o resultado potencial da intervenção $a$ no tempo $T$. Assim, uma unidade $i$ tratada (tratamento binário, isto é, $T=1$) no período $2$ é dada por: $Y_i^1(2)$.
+
+Se tenho viés de variável omitida pelo espaço e pelo tempo, posso remover cada um dos vieses por meio das duas diferenças (considere dois grupos, $i$ e $j$ no espaço e dois períodos):
+
+## Exemplo
+
+- Se quero estimar o efeito da competição eleitoral sobre a concentração espacial de votos. Alguns distritos têm maior competição eleitoral, outros têm menor competição eleitoral. Vamos considerar binário e chamar de grande e pequena concentração eleitoral
+- Meu estimando teórico pode ser o efeito causal de um distrito passar de baixca competição eleitoral para alta sobre a concentração espacial do voto (mudança de regra).
+- Ou o efeito causal de um candidato passar de um distrito de baixa competição eleitoral para alta concentração sobre a concentração espacial dos seu votos.
+- O parâmetro que representa essa pergunta é o ATE. Se eu estiver interessado no efeito entre os que efetivamente fizeram essa mudança, é o ATT.
+
+## Entendendo o ATT
+
+O ATT pode ser definido como a diferença média no resultado potencial do tratamento em relação ao resultado potencial do controle dos candidatos que mudaram efetivamente de distrito de baixa para alta competição ($D=1$) no período 2 ($T=2$.)
+
+$ATT = \mathbb{E}[Y_i^1(2) - Y_i^0(2)|D=1]$
+
+- Aqui, quero saber, no período 2, após ter mudado de distrito de baixa para alta competição, qual o efeito sobre a concentração espacial do voto.
+
+
+## Diferença (ingênua) no tempo
+
+- Como o DAG abaixo sugere, não basta comparar os mesmos candidatos antes da mudança de distrito e depois da mudança de distrito.
+- Outras variáveis podem ter mudado entre um período e outro que causam a concentração de votos antes e depois da mudança. Ou seja, em geral:
+
+$\mathbb{E}[Y_i(2) - Y_i(1)|D_i=1] \neq \mathbb{E}[Y^1(2) - Y^0(2)|D=1]$
+
+
+### Diferença ingênua entre grupos (espaço)
+Similarmente, não é suficiente comparar no período 2 candidatos em distritos de alta e baixa competição eleitoral.
+
+Pode ser que haja diferenças sistemáticas entre candidatos que estão em distritos de alta competição e os de baixa competição.
+
+$\mathbb{E}[Y_i(2) - Y_j(2)|D_i=1] \neq \mathbb{E}[Y^1(2) - Y^0(2)|D=1]$
+
+
+## Dif em Dif
+
+- Suponha que a mudança (a diferença pré e pós) nos resultados potenciais do grupo tratado seria a mesma do grupo controle, se não tivessem recebido o tratamento, isto é:
+
+$\mathbb{E}[Y^0(2) - Y^0(1)|D=1] = \mathbb{E}[Y^0(2) - Y^0(1)|D=0]$
+
+Essa suposição é chamada de Tendências paralelas, pois trata do fato de que as mudanças nos tratamentos e controle são as mesmas, o que se reflete em retas paralelas.
+
+## DID
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+& \textbf{Controle - $D_i = 0$} & \textbf{Tratamento - $D_i = 1$} \\
+\hline
+\textbf{Pré-tratamento - $T_i = 1$} & \( \mathbb{E}[Y^0(1)] \) & \( \mathbb{E}[Y^1(1)] \) \\
+\hline
+\textbf{Pós-tratamento $T_i = 2$} & \( \mathbb{E}[Y^0(2)] \) & \( \mathbb{E}[Y^1(2)] \) \\
+\hline
+\end{tabular}
+\caption{Potential outcomes in different periods and groups.}
+\end{table}
+
+## DiD 2
+
+Há duas formas equivalentes de pensar no estimador de DiD:
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+& \textbf{Estratégia 1} & \textbf{Estratégia 2} \\
+\hline
+\textbf{Diferença 1} & \( \mathbb{E}[Y^1(2) - Y^0(1)|D=1] \) & \( \mathbb{E}[Y^1(2) - Y^0(2)|T=2] \) \\
+\hline
+\textbf{Diferença 2} & \( \mathbb{E}[Y^1(2) - Y^0(1)|D=0] \) & \( \mathbb{E}[Y^1(2) - Y^0(2)|T=1] \) \\
+\hline
+\end{tabular}
+\caption{DiD estimator.}
+\end{table}
+
+O DiD é sempre a diferença 1 menos a diferença 2.
+
+## DiD 3
+
+- Ou seja, o ATT pode ser estimado pela diferença
+
+- Em nosso exemplo, temos dois períodos: 1 e 2 (eleição em t e eleição em t+1), e dois cargos (deputado estadual e federal). Portanto, podemos estimar o efeito da competição eleitoral a partir da diferença entre a *mudança média nos tratados no tempo* e *mudança média no controle no tempo* ou a diferença entre a *mudança média entre tratados e controle no período 2* e *mudança média entre tratados e controle no período 1*. Ambos estimadores são iguais.
+
+- Ou seja, posso tanto calcular a diferença na concentração do voto entre indivíduos que passaram de cargos estaduais para federais (tratados no tempo), essa é a diferença 1. E subtrair da diferença 2, a diferença na concentração de votos entre indivíduos que continuaram no cargo de deputado estadual (baixa competição política).
+
+- Ou calcular a diferença na concentração de votos no período 2 entre candidatos a dep. federal e estadual, menos a diferença entre dep. federal e estadual no período 1.
+
+## DiD 4
+
+Em nosso exemplo simplificado, temos apenas dois níveis de tratamento (competição baixa e alta) e apenas dois períodos (duas eleições).
+
+https://jrnold.github.io/intro-methods-notes/panel-data-fixed-effects-and-difference-in-difference.html#basic-differences-in-differences-model
+
+https://diff.healthpolicydatascience.org/#confounding
+
+https://diff.healthpolicydatascience.org/#ref-vanderlaanrobins2003
+
+https://theeffectbook.net/ch-DifferenceinDifference.html
+
+https://bookdown.org/mike/data_analysis/difference-in-differences.html
+
+https://bookdown.org/cuborican/RE_STAT/difference-in-differences.html
