@@ -105,17 +105,76 @@ O DiD é sempre a diferença 1 menos a diferença 2.
 
 ## DiD 3
 
-- Ou seja, o ATT pode ser estimado pela diferença
+- Ou seja, o ATT pode ser estimado pela diferença das diferenças.
 
-- Em nosso exemplo, temos dois períodos: 1 e 2 (eleição em t e eleição em t+1), e dois cargos (deputado estadual e federal). Portanto, podemos estimar o efeito da competição eleitoral a partir da diferença entre a *mudança média nos tratados no tempo* e *mudança média no controle no tempo* ou a diferença entre a *mudança média entre tratados e controle no período 2* e *mudança média entre tratados e controle no período 1*. Ambos estimadores são iguais.
+- Em nosso exemplo, temos dois períodos: 1 e 2 (eleição em t e eleição em t+1), e dois cargos (deputado estadual e federal). Portanto, podemos estimar o efeito da competição eleitoral a partir da diferença entre a **mudança média nos tratados no tempo** e **mudança média no controle no tempo** ou a diferença entre a **mudança média entre tratados e controle no período 2** e **mudança média entre tratados e controle no período 1**. Ambos estimadores são iguais.
 
 - Ou seja, posso tanto calcular a diferença na concentração do voto entre indivíduos que passaram de cargos estaduais para federais (tratados no tempo), essa é a diferença 1. E subtrair da diferença 2, a diferença na concentração de votos entre indivíduos que continuaram no cargo de deputado estadual (baixa competição política).
 
 - Ou calcular a diferença na concentração de votos no período 2 entre candidatos a dep. federal e estadual, menos a diferença entre dep. federal e estadual no período 1.
 
-## DiD 4
+## Estimador DiD
 
-Em nosso exemplo simplificado, temos apenas dois níveis de tratamento (competição baixa e alta) e apenas dois períodos (duas eleições).
+- A *switching equation* é $Y_{it} = Y^0_{it} \cdot (1 - D_{it}) + Y^1_{it} \cdot D_{it}$
+
+- Para o grupo de tratamento ($D_{i1} = 1$), temos: 
+Se t = 0, $Y_{i0} = Y^0_{i0}$.
+
+Se t =1, $Y_{i1} = Y^1_{i1}$.
+
+- Para o grupo de controle ($D_{i1} = 0$), temos:
+Se t = 0, $Y_{i0} = Y^0_{i0}$.
+
+Se t =1, $Y_{i1} = Y^0_{i1}$.
+
+## Estimador DiD - Part 2
+
+- $\Delta Y_{trat} = \mathbb{E}[Y^1_{i1}|D_{i1}=1] - \mathbb{E}[Y^1_{i0}|D_{i0}=1]$
+
+- $\Delta Y_{controle} = \mathbb{E}[Y^0_{i1}|D_{i1}=0] - \mathbb{E}[Y^0_{i0}|D_{i0}=1]$
+
+- DiD estimator: $\Delta Y_{trat} - \Delta Y_{controle}$
+
+- Usando observáveis:
+$\mathbb{E}[Y_{i1}|D_{i1}=1] - \mathbb{E}[Y^{i0}|D_{i0}=1] - \mathbb{E}[Y_{i1}|D_{i1}=0] - \mathbb{E}[Y_{i0}|D_{i0}=1]$
+
+## Estimador DiD 3
+
+- Suposição de tendências paralelas: $\mathbb{E}[Y^0_{i1} - Y^0_{i0}|D_{i1}=1] = \mathbb{E}[Y^0_{i1} - Y^0_{i0}|D_{i1}=0]$
+
+- O lado esquerdo reflete a mudança média antes e depois do tratamento, entre os tratados, no contrafactual (sem tratamento).
+- O lado direito representa a mudança média antes e depois, no controle.
+
+## Estimador DiD - estratégia 1
+
+- A primeira diferença é: $\mathbb{E}[Y^1_{i1} - Y^0_{i1}|D_{i1} = 1]$
+
+- Usando a switching equation, temos: $\mathbb{E}[Y^1_{i1} - Y^0_{i1}|D_{i1} = 1]$
+
+- O lado esquerdo reflete a mudança média antes e depois do tratamento, entre os tratados, no contrafactual (sem tratamento).
+- O lado direito representa a mudança médi antes e depois, no controle.
+
+## DiD - regressão
+
+- É possível estimar um modelo de DiD com regressão.
+
+- $y_{it} = \alpha + \beta_1 Post_t + \beta_2 Treat_i + \delta (Post_t \times Treat_i) + e_{it}$
+
+- $y_{it} = \alpha_i + \gamma_t + \delta (Post_t \times Treat_i) + e_{it}$
+
+- A segunda parametrização é chamada de "two-way fixed effects", pois usamos um efeito fixo de unidade e um de tempo.
+
+## Erro padrão
+
+### Block bootstrapping standard error
+
+Inserir conteúdo
+
+### Clustering standard errors at the group level.
+
+Inserir conteúdo
+
+## Referências
 
 https://jrnold.github.io/intro-methods-notes/panel-data-fixed-effects-and-difference-in-difference.html#basic-differences-in-differences-model
 

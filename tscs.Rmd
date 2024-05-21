@@ -1,0 +1,85 @@
+---
+title: "tfe"
+author: "Manoel Galdino"
+date: "2024-05-20"
+output: pdf_document
+bibliography: TSCS.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introdução
+
+Cerca de 20 anos atrás a literatura metodológica de ciência política sobre dados de Série de Tempo com Corte Transversal (TSCS na sigla em inglês, de Time Series Cross Section) estava devotada integralmente para as dificuldades de inferência estatística, isto é, como computar corretamente o erro padrão nesse tipo de regressão.
+
+Após a revolução da credibilidade na economia e que se espraiou pela ciência política, os estudos mudaram para questões de identificação causal, deixando as questões de inferência estatística em segundo plano. O objetivo do presente trabalho é fazer um survey dessa literatura mais recente, feita nos últimos dez anos e ainda em franco desenvolvimento, de modo a atualizar o cientista político que fez seu treino metodológico sem contato com essa literatura.
+
+# Literatura de Dados de Painel
+
+A partir dos anos 80, emergiu uma literatura metodológica com ênfase em dados de Painel na economia (@AR03, cf. @AI23). Uma das questões primordiais dessa literatura dizia respeito a como modelar efeitos idiossincráticos das unidades que não variavam no tempo, isto é, quando usar modelos de efeitos fixos ou aleatórios (cf. @BJ15 para uma discussão mais recente). Modelos de efeitos fixos seriam mais adequados quando houvesse correlação com covariáveis, enquanto efeitos aleatórios quando a correlação fosse inexistente. A partir disso, uma grande parte da literatura foi desenvolvida para garantir a estimação com T pequeno.
+
+Motivado por questões substantivas, a dinâmica sempre foi algo importante na literatura de ciência política, como refletida pelos títulos de artigos hoje clássicos de Katz & Becker sobre levar a dimensão temporal seriamente, em particular a questão de variável dependente defasada e como modelar a dinâmica resultante.
+
+# Notas Soltas
+Um aspecto negligenciado na literatura metodológica de ciência política e mencionado por @AI23 é a distinção entre dois tipos de dados: dados de TSCS clássicos, em que temos respostas $y_{it}$ e tratamento $D_{it}$ e o que eles chamamam de row-column exchangeable data (RCED). O exemplo que eles dão são de consumidores $i$ comprando itens $j$, ou no caso de corridas de aplicativo, consumidores $i$ e motoristas $j$. Aqui, temos respostas $y_{ij}$ e tratamento $D_{ij}$, isto é, dados duplamente indexados. A principal diferença entre dados de TSCS e  RCED é que a ordem não importa nesse último, ou seja, podemos considerar não apenas as unidades $i$ como permutáveis, mas também o segunod índice $j$. No caso de dados de TSCS, o índice temporal não é permutável. E no entanto, modelos de regressão com dois efeitos fixos e vários métodos de controle sintético podem ser usados igualmente para esse tipo de dado, o que significa que tais métodos não aproveitam a informação presente na ordem temporal dos dados para estimação de parâmetros. Onde tem havido algum tipo de atenção metodológica em ciência política é na análise de dados diádicos, típicos de relações internacionais. Não iremos abordar esse aspecto em nosso survey, mas recomendamos @BON20 em econometria e @PO16.
+
+# Within e Between
+
+Considere que estamos interessados em estimar o efeito de instituições legadas pelo colonialismo sobre o desenvolvimento econômico dos países, como em @AJR01. Uma formulação útil (@BJ15) para nossos propósitos é pensar no efeito das instituições do país $i$ no período $t$, $D_{it}$ como sendo composta de dois efeitos: um efeito dentro do país "within" e um efeito entre países "between": $D_{it} = D_i^B + D_{it}^W$. Em nosso exemplo, pode haver variação no efeito de instituições entre países ($D_i^B$) devido à fatores usualmente omitidos das regressões, como questões geográficas, cultura política exportada pelos colonizadores etc. E pode haver variação no tempo para cada país, pois as instituições podem ter dependência de caminho, levando-as a se reproduzirem ao longo do tempo e impactando a renda per capita dos países.
+
+A figura de @BA08 é ilustrativa a esse respeito:
+
+![Descriptive text](within-between.png)
+
+Se a gente considerar que o painel D apresenta as unidades (indivíduos, países, estados, municípios, escolas etc.) como clusters, temos o caso arquitípico das variações não-observadas entre unidades capturadas pelos efeitos fixos das unidades. Já se os clusters representareem a dimensão temporal, isto é, cada cluster uma unidade de tempo (ano, mês, trimestre, dia etc.), então os efeitos fixos de tempo capturam a variação não-observada temporal.
+
+
+
+
+```{r witthin-between, echo=FALSE, warning=FALSE, message=FALSE}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Create sample data
+set.seed(123)
+n_units <- 10
+n_time <- 20
+
+data <- expand.grid(unit = 1:n_units, time = 1:n_time)
+data$value <- with(data, rnorm(n_units, 10, 5) + rnorm(n_time, 0, 1)[time])
+
+# Aggregate data to show mean value per unit
+data_between <- data %>%
+  group_by(unit) %>%
+  summarize(mean_value = mean(value))
+
+# Plot 1: Variation Between Units (Scatter Plot)
+p1 <- ggplot(data_between, aes(x = factor(unit), y = mean_value)) +
+  geom_point(size = 3, color = "blue") +
+  labs(title = "Variation Between Units", x = "Unit", y = "Mean Value") +
+  theme_minimal()
+
+# Plot 2: Variation Within Units Over Time (Scatter Plot)
+p2 <- ggplot(data, aes(x = time, y = value, color = factor(unit))) +
+  geom_point(size = 2) +
+  labs(title = "Variation Within Units Over Time", x = "Time", y = "Value") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# Display plots
+p1
+p2
+```
+
+# DAGs
+
+O trabalho de @M24 apresenta DAGs que codificam as suposições principais de identificação de TSCS com sequencial ignorability e paralell trends.
+
+![Descriptive teDAGs tscs.png.png)
+
+Texto sobre DAGs
+# References
