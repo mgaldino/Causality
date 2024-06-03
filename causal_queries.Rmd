@@ -1,0 +1,214 @@
+---
+title: "Casual Queries"
+author: "Manoel Galdino"
+date: "`r Sys.Date()`"
+fontsize: 9pt
+output: 
+  beamer_presentation:
+    theme: "Madrid"
+    colortheme: "dolphin"
+header-includes:
+  - \usepackage{graphicx}
+  - \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+---
+
+## Introdução
+
+- Situação: Alguns indivíduos em uma população doente recebem tratamento, enquanto outros não (\(X\)).
+- Observação subsequente: Quais indivíduos se tornam saudáveis e quais não (\(Y\)).
+- Suposição: Cada indivíduo pertence a um dos quatro tipos não observados, definidos pelo efeito potencial do tratamento.
+
+## Tipos Causais
+
+### Adverso
+- Definição: Aqueles que melhorariam se e somente se não recebessem o tratamento.
+- Representação: \( \text{Adverso} \rightarrow a \)
+
+### Benéfico
+- Definição: Aqueles que melhorariam se e somente se recebessem o tratamento.
+- Representação: \( \text{Benéfico} \rightarrow b \)
+
+### Crônico
+- Definição: Aqueles que permanecerão doentes, independentemente de receberem ou não o tratamento.
+- Representação: \( \text{Crônico} \rightarrow c \)
+
+### Destinado
+- Definição: Aqueles que melhorarão, independentemente de receberem ou não o tratamento.
+- Representação: \( \text{Destinado} \rightarrow d \)
+
+## Participação Relativa dos Tipos
+
+- Usamos os termos \( \lambda_a \), \( \lambda_b \), \( \lambda_c \), \( \lambda_d \) para denotar a participação relativa desses tipos na população de interesse.
+
+## Conclusão
+
+- A análise dos tipos causais é fundamental para entender os efeitos potenciais do tratamento em populações doentes.
+- O conhecimento da distribuição desses tipos na população ajuda na formulação de políticas de saúde e estratégias de tratamento.
+
+## Generalização de Configurações Simples
+
+- Temos uma variável causal e um resultado, ambos binários (valores 0 ou 1).
+- Existem apenas quatro conjuntos de possíveis resultados potenciais, ou "tipos".
+
+## Tipos Potenciais
+
+### Variável \( Y \)
+
+- Usamos \( \theta^Y \) para capturar o “tipo” da unidade: como \( Y \) responde às suas causas potenciais.
+- Adicionamos subscritos para denotar tipos particulares.
+
+### Notação \( \theta^Y_{ij} \)
+
+- \( i \): resultado potencial quando \( X = 0 \)
+- \( j \): resultado potencial quando \( X = 1 \)
+
+## Exemplificação dos Tipos
+
+- Com quatro tipos possíveis, utilizamos \( \theta^Y_{ij} \) para representar cada caso específico:
+  - \( \theta^Y_{00} \): \( Y \) é 0 quando \( X = 0 \) e 0 quando \( X = 1 \). Aka **c**rônico.
+  - \( \theta^Y_{01} \): \( Y \) é 0 quando \( X = 0 \) e 1 quando \( X = 1 \). Aka **b**enéfico
+  - \( \theta^Y_{10} \): \( Y \) é 1 quando \( X = 0 \) e 0 quando \( X = 1 \). Aka **a**dverso.
+  - \( \theta^Y_{11} \): \( Y \) é 1 quando \( X = 0 \) e 1 quando \( X = 1 \). Aka **d**estinado.
+
+
+## Tabela dos Tipos Potenciais
+
+```{r, echo=FALSE}
+library(knitr)
+
+# Criação da tabela
+types <- matrix(c("Y(0) = 1", "Y(0) = 0", "Y(0) = 0", "Y(0) = 1",
+                  "Y(1) = 0", "Y(1) = 1", "Y(1) = 0", "Y(1) = 1"),
+                nrow = 2, byrow = TRUE,
+                dimnames = list(c("X = 0", "X = 1"),
+                                c("Tipo a: ($\\theta^Y_{10}$)", "Tipo b: ($\\theta^Y_{01}$)", "Tipo c: ($\\theta^Y_{00})$", "Tipo d: ($\\theta^Y_{11}$)")))
+
+# Exibir a tabela
+kable(types, format = "pandoc", align = "c")
+
+```
+
+## Generalizando para N causas
+
+- Em geral, fenômenos sociais são multicausais
+- Portanto, precisamos generalizar nossa notação para mais de uma causa.
+- Suponha duas causas, $X_1$ e $X_2$, ambas binárias. Temos quatro possibilidades de combinação de valores de $X_1$ e $X_2$.
+- Portanto, escreveremos $\theta^Y_{hijk}$ de acordo com a quesção abaixo:
+
+\begin{eqnarray}
+\theta^Y_{hijk} \left\{\begin{array}{ccc}  Y(0,0) &=& h  \\
+Y(1,0) &=& i \\
+Y(0,1) &=& j \\
+Y(1,1) &=& k
+\end{array} \right.
+\end{eqnarray}
+
+- O primeiro argumento de $Y(.,.)$ é o valor de $X_1$ e o segundo argumento o valor de $X_2$.
+- Por exemplo, $\theta^Y_{0101}$ significa que $Y = 1$ quando $X_1 = 1 e X_2 = 0$ e quando ambos $X_1 = 1$ e $X_2 = 1$. Ou seja, só $X_1$ tem efeito. $\theta^Y_{0011}$ é tipo em que $Y = 1$ se e somente se $X_2 = 1$.
+
+## Generalizando para N causas - cont
+
+- Aqui, esse modelo captura interações entre variáveis. O tipo $\theta^Y_{0001}$ diz que $X_2$ tem u mefeito sobre $Y$ apenas quando $X_1 = 1$.
+
+- Os tipos $\theta^Y_{0001}$ e $\theta^Y_{1000}$ são complementares, isto é, $X_1$ e $X_2$ se complementa. No primeiro tipo, uma variável só tem efeito na presença da outra, no outro caso, só há efeito na ausência das duas (efeito negativo).
+
+- Os tipos $\theta^Y_{0111}$ e $\theta^Y_{1000}$ são substitutos, pois no primeiro caso o efeito causal de $X_2$ só existe quando $X_1 = 0$, e no segundo caso, $X_1$ tem um efeito causal negativo apenas quando $X_2 = 0$.
+
+- Nesse framework, causas não precisam ser rivais.
+
+## Causas de fato/atuais (actual)
+
+- Nossa defininção de causalidade contrafactual (resultados potenciais) gera o seguinte "paradoxo".
+- Digamos que Suzy e Bob jogam uma pedra em uma garrafa. A peda de Suzy atinge a garrafa primeiro, quebrando a garrafa. Porém, se a pedra de Suzy não tivesse atingido a garrafa, Bob teria acertado a garrafa e ela teria quebrado.
+- Portanto, o "tratamento" Suzy joga pedra não é um efeito causal da garrafa quebrada, pois o resultado potencial é o mesmo quer ela jogue a garafa ou não.
+
+## Causas de fato/atuais (actual) - cont.
+
+- Porém, óbvio que foi a pedra de Suzy que quebrou a garrafa.
+- Chamamos de causas de fato (ou atuais) este tipo de causa, cujo efeito depende de condicionarmos em outra variável (no caso, a pedra de Bob não ter atingido a garrafa antes).
+- Nós podemos usar o modelo de queries causais para responder a esse tipo de pergunta e diferenciar causais atuais (de fato) de causas no sentido contrafactual.
+
+## Modelos de Queries causais
+
+- Explicar o modelo.
+
+## Caso aplicado
+
+- Boix (1999) apresenta uma teoria influente sobre a escolha de sistemas eleitorais e um teste quantitativo da teoria.
+- Em resumo, Boix teoriza que as preferências dos partidos governantes entre regras de pluralidade e representação proporcional (RP) dependem da ameaça dos partidos desafiantes sob as regras vigentes.
+
+## Preferências dos Partidos
+
+- A presença de um partido de oposição forte, juntamente com a falha de coordenação entre os partidos governantes, cria fortes incentivos para que os governos mudem da pluralidade para a RP.
+- Boix foca em um conjunto de 22 casos europeus do período entre guerras.
+- Nesse contexto—com a extensão do sufrágio universal permitindo o surgimento de desafiantes socialistas—a teoria implica que os partidos governantes deveriam ter mais probabilidade de mudar para RP onde a esquerda era eleitoralmente forte e a direita era fragmentada.
+
+## Teoria de Boix (1999)
+
+- **Hipótese Principal**: Governos são mais propensos a adotar RP quando enfrentam uma oposição forte e uma divisão entre partidos de direita.
+- **Contexto Histórico**: Extensão do sufrágio universal e ascensão de desafiantes socialistas no período entre guerras na Europa.
+
+## Hipóteses Testadas
+
+- **Força da Esquerda**: Quanto mais forte a esquerda eleitoralmente, maior a probabilidade de mudança para RP.
+- **Divisão da Direita**: Quanto mais fragmentada a direita, maior a probabilidade de mudança para RP.
+- **Interação**: A combinação de uma esquerda forte e uma direita fragmentada aumenta significativamente a probabilidade de mudança para RP.
+
+## Resultados
+
+- A regressão mostra uma interação negativa significativa entre a força da esquerda e a divisão da direita.
+- **Conclusão**: Resultados consistentes com a teoria de Boix sobre a escolha de sistemas eleitorais.
+
+## DAG do modelo de Boix
+
+```{r setup, include=FALSE}
+# Carregando o pacote necessário
+library(dagitty)
+library(ggdag)
+
+# Definindo o DAG
+dag_boix <- dagitty('
+dag {
+  U [label="Variável Não Observada"]
+  E [label="Força da Esquerda"]
+  D [label="Divisão da Direita"]
+  PR [label="Representação Proporcional"]
+  
+  E -> PR
+  D -> PR
+  U -> E
+  U -> D
+  U -> PR
+}
+')
+
+# Plotando o DAG
+ggdag(dag_boix) + 
+  theme_dag()
+```
+
+- Um modelo com três causas binárias possui $2^2^3 = 256$ tipos. Vamos usar o pacote CausalQueries com duas causas binárias para ficarmos com 16 tipos.
+
+##
+
+```{r causal-queries, include=TRUE, eval=FALSE}
+
+library(CausalQueries)
+# Steps 1 and 2 
+# We define a model with three binary nodes and 
+# specified edges between them:
+model <- make_model("E -> Y; D -> Y")
+
+# Functional forms are unrestricted. Restrictions can 
+# be added. Here we impose monotonicity at each step 
+# by removing one type for M and one for Y
+model <- set_restrictions(model, labels = list(M = "10", Y="10"))
+
+# Step 4
+# Set priors over the distribution of (remaining) causal types.
+# Here we set "jeffreys priors" 
+model <- set_priors(model, distribution = "jeffreys")
+
+# We now have a model defined as an R object. 
+# Later we will update  and query this model
+```
